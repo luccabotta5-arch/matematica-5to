@@ -1,0 +1,2546 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Matemática 5° Año</title>
+  <meta name="description" content="Material de estudio de Matemática de 5° año organizado por módulos: teoría, ejemplos y práctica.">
+
+  <!-- Tipografías -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&display=swap" rel="stylesheet">
+
+  <!-- KaTeX: dibuja las fórmulas escritas en LaTeX -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+
+  <style>
+    /* ---------- Paleta y variables ---------- */
+    :root {
+      --papel: #F7F9FC;      /* fondo de hoja cuadriculada */
+      --cuadricula: #DDE5F0; /* líneas de la cuadrícula */
+      --tinta: #1C2B4A;      /* texto principal */
+      --lapicera: #2952CC;   /* acento azul */
+      --margen: #D2453D;     /* línea roja de margen */
+      --resaltador: #FFF3B0; /* fondo de las soluciones */
+      --gris: #5B6782;       /* texto secundario */
+      --blanco: #FFFFFF;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--tinta);
+      font-family: "Atkinson Hyperlegible", system-ui, sans-serif;
+      font-size: 1.0625rem;
+      line-height: 1.6;
+      /* Fondo de cuaderno cuadriculado hecho solo con CSS */
+      background-color: var(--papel);
+      background-image:
+        linear-gradient(var(--cuadricula) 1px, transparent 1px),
+        linear-gradient(90deg, var(--cuadricula) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+
+    h1, h2, h3 {
+      font-family: "Bricolage Grotesque", system-ui, sans-serif;
+      line-height: 1.15;
+      margin: 0;
+    }
+
+    a { color: var(--lapicera); }
+
+    :focus-visible {
+      outline: 3px solid var(--lapicera);
+      outline-offset: 3px;
+    }
+
+    .contenedor {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    /* ---------- Encabezado ---------- */
+    /* Solo padding vertical: el horizontal lo da .contenedor,
+       así el título queda alineado con las tarjetas */
+    .encabezado {
+      padding-top: 56px;
+      padding-bottom: 8px;
+    }
+
+    .encabezado h1 {
+      font-size: clamp(2.5rem, 8vw, 4.75rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .encabezado h1 a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .bajada {
+      max-width: 60ch;
+      margin: 12px 0 0;
+      color: var(--gris);
+      font-size: 1.125rem;
+    }
+
+    /* Curva seno que se dibuja una sola vez al cargar */
+    .onda {
+      display: block;
+      width: 100%;
+      height: 80px;
+      margin-top: 16px;
+    }
+
+    .onda path {
+      fill: none;
+      stroke: var(--lapicera);
+      stroke-width: 3;
+      stroke-linecap: round;
+      stroke-dasharray: 1600;
+      stroke-dashoffset: 1600;
+      animation: dibujar 2.2s ease-out 0.2s forwards;
+    }
+
+    .onda line {
+      stroke: var(--tinta);
+      stroke-width: 1.5;
+    }
+
+    @keyframes dibujar {
+      to { stroke-dashoffset: 0; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .onda path { animation: none; stroke-dashoffset: 0; }
+    }
+
+    /* ---------- Inicio: tarjetas de módulos ---------- */
+    main { padding-bottom: 64px; }
+
+    .inicio h2 {
+      font-size: 1.5rem;
+      margin: 40px 0 20px;
+    }
+
+    /* Grilla de 8 columnas: cada tarjeta ocupa 2, así entran 4 por fila.
+       La 5ª empieza en la columna 2 para que la última fila (3 tarjetas)
+       quede centrada: 4 arriba, 3 abajo, simétrico. */
+    .tarjetas {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 20px;
+    }
+
+    .tarjetas li { grid-column: span 2; }
+    .tarjetas li:nth-child(5) { grid-column: 2 / span 2; }
+
+    .tarjeta {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      height: 100%;
+      padding: 20px;
+      background: var(--blanco);
+      border: 2px solid var(--tinta);
+      border-radius: 6px;
+      color: var(--tinta);
+      text-decoration: none;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .tarjeta:hover,
+    .tarjeta:focus-visible {
+      transform: translate(-3px, -3px);
+      box-shadow: 6px 6px 0 var(--lapicera);
+    }
+
+    .tarjeta .numero {
+      color: var(--margen);
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .tarjeta h3 { font-size: 1.35rem; }
+
+    .tarjeta p {
+      margin: 0;
+      color: var(--gris);
+      font-size: 0.95rem;
+    }
+
+    /* La fórmula va siempre al pie de la tarjeta (margin-top: auto),
+       así todas quedan a la misma altura dentro de cada fila */
+    .tarjeta .formula-tarjeta {
+      order: 1; /* se muestra después de la descripción */
+      margin-top: auto;
+      padding-top: 14px;
+      border-top: 1px dashed var(--cuadricula);
+      font-size: 1.05rem;
+      overflow-x: auto;
+    }
+
+    /* ---------- Vista de un módulo ---------- */
+    .volver {
+      display: inline-block;
+      margin: 24px 0 12px;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .volver:hover { text-decoration: underline; }
+
+    .modulo > h2 {
+      font-size: clamp(1.9rem, 5vw, 2.75rem);
+      margin-bottom: 20px;
+    }
+
+    .modulo > h2:focus { outline: none; }
+
+    /* Pestañas Teoría / Ejemplos / Práctica */
+    .pestanas {
+      display: flex;
+      gap: 4px;
+      overflow-x: auto;
+      border-bottom: 2px solid var(--tinta);
+    }
+
+    .pestana {
+      flex-shrink: 0;
+      padding: 10px 18px;
+      background: var(--papel);
+      border: 2px solid var(--tinta);
+      border-bottom: none;
+      border-radius: 6px 6px 0 0;
+      color: var(--tinta);
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .pestana[aria-selected="true"] {
+      background: var(--lapicera);
+      border-color: var(--lapicera);
+      color: var(--blanco);
+    }
+
+    /* Hoja de cuaderno con margen rojo */
+    .hoja {
+      position: relative;
+      padding: 28px 28px 28px 64px;
+      background: var(--blanco);
+      border: 2px solid var(--tinta);
+      border-top: none;
+      border-radius: 0 0 6px 6px;
+    }
+
+    .hoja::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 40px;
+      width: 2px;
+      background: var(--margen);
+      opacity: 0.6;
+    }
+
+    .hoja > * { max-width: 72ch; }
+
+    .hoja h3 {
+      font-size: 1.4rem;
+      margin: 32px 0 8px;
+      color: var(--lapicera);
+    }
+
+    .hoja h3:first-child { margin-top: 0; }
+
+    .hoja h4 {
+      font-size: 1.1rem;
+      margin: 20px 0 6px;
+    }
+
+    .hoja p, .hoja ul, .hoja ol { margin: 8px 0; }
+    .hoja li { margin: 4px 0; }
+
+    .formula {
+      margin: 12px 0;
+      padding: 8px 12px;
+      border-left: 4px solid var(--lapicera);
+      background: var(--papel);
+      overflow-x: auto;
+    }
+
+    .nota {
+      margin: 16px 0;
+      padding: 12px 16px;
+      border: 2px dashed var(--margen);
+      border-radius: 6px;
+    }
+
+    /* Tablas con desplazamiento horizontal en celulares */
+    .tabla {
+      max-width: 100%;
+      overflow-x: auto;
+      margin: 12px 0;
+    }
+
+    table {
+      border-collapse: collapse;
+      min-width: 100%;
+      font-size: 0.95rem;
+    }
+
+    th, td {
+      padding: 8px 10px;
+      border: 1px solid var(--cuadricula);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th { background: var(--papel); }
+
+    /* Ejercicios de práctica */
+    .ejercicio {
+      margin: 16px 0;
+      padding: 16px;
+      border: 1px solid var(--cuadricula);
+      border-radius: 6px;
+    }
+
+    .ejercicio p:first-child { margin-top: 0; }
+
+    .ejercicio summary {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 6px 14px;
+      border: 2px solid var(--lapicera);
+      border-radius: 6px;
+      color: var(--lapicera);
+      font-weight: 700;
+      cursor: pointer;
+      list-style: none;
+    }
+
+    .ejercicio summary::-webkit-details-marker { display: none; }
+
+    .ejercicio details[open] summary {
+      background: var(--lapicera);
+      color: var(--blanco);
+    }
+
+    .solucion {
+      margin-top: 12px;
+      padding: 12px 16px;
+      background: var(--resaltador);
+      border-radius: 6px;
+    }
+
+    .solucion p { margin: 4px 0; }
+
+    /* ---------- Gráficos interactivos ---------- */
+    .grafico {
+      margin: 28px 0;
+      padding: 16px;
+      background: var(--blanco);
+      border: 2px solid var(--tinta);
+      border-radius: 6px;
+    }
+
+    .grafico figcaption {
+      margin-bottom: 10px;
+      font-family: "Bricolage Grotesque", system-ui, sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+    }
+
+    .grafico-formula {
+      min-height: 2.4em;
+      margin-bottom: 12px;
+      padding: 8px 12px;
+      background: var(--papel);
+      border-left: 4px solid var(--lapicera);
+      overflow-x: auto;
+    }
+
+    .grafico canvas {
+      display: block;
+      width: 100%;
+      border: 1px solid var(--cuadricula);
+      border-radius: 4px;
+      cursor: crosshair;
+      touch-action: pan-y; /* deja hacer scroll vertical en el celular */
+    }
+
+    .grafico .grafico-coords {
+      min-height: 1.6em;
+      margin: 6px 0 0;
+      color: var(--gris);
+      font-size: 0.9rem;
+    }
+
+    .grafico .grafico-leyenda {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 18px;
+      margin: 10px 0 0;
+      padding: 0;
+      list-style: none;
+      font-size: 0.9rem;
+    }
+
+    .grafico .grafico-leyenda li {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0;
+    }
+
+    .muestra {
+      width: 22px;
+      border-top: 3px solid;
+    }
+
+    .muestra.discontinua { border-top-style: dashed; }
+
+    .muestra.punto {
+      width: 10px;
+      height: 10px;
+      border: none;
+      border-radius: 50%;
+    }
+
+    .controles {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 12px 20px;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px dashed var(--cuadricula);
+    }
+
+    .controles:empty { display: none; }
+
+    .controles label {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
+
+    .controles label.casilla {
+      flex-direction: row;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .controles input[type="range"] {
+      width: 100%;
+      accent-color: var(--lapicera);
+    }
+
+    .controles input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--lapicera);
+    }
+
+    .controles select {
+      width: 100%;
+      padding: 6px 8px;
+      background: var(--blanco);
+      border: 2px solid var(--tinta);
+      border-radius: 6px;
+      color: var(--tinta);
+      font: inherit;
+      font-weight: 400;
+    }
+
+    .controles output { color: var(--lapicera); }
+
+    .grafico .grafico-info {
+      margin: 12px 0 0;
+      font-size: 0.95rem;
+    }
+
+    footer {
+      padding-top: 24px;
+      padding-bottom: 40px;
+      color: var(--gris);
+      font-size: 0.9rem;
+    }
+
+    /* ---------- Tablets: 2 tarjetas por fila, la 7ª centrada ---------- */
+    @media (max-width: 900px) {
+      .tarjetas { grid-template-columns: repeat(4, 1fr); }
+      .tarjetas li:nth-child(5) { grid-column: span 2; }
+      .tarjetas li:nth-child(7) { grid-column: 2 / span 2; }
+    }
+
+    /* ---------- Celulares ---------- */
+    @media (max-width: 600px) {
+      .tarjetas { grid-template-columns: 1fr; }
+      .tarjetas li,
+      .tarjetas li:nth-child(5),
+      .tarjetas li:nth-child(7) { grid-column: auto; }
+      .encabezado { padding-top: 32px; }
+      .hoja { padding: 20px 16px 20px 36px; }
+      .hoja::before { left: 20px; }
+      .pestana { padding: 8px 12px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="encabezado contenedor">
+    <h1><a href="#inicio">Matemática 5° Año</a></h1>
+    <p class="bajada">Todo el material de la materia ordenado por módulo. Cada tema tiene la teoría, ejemplos resueltos paso a paso y ejercicios para practicar con su solución.</p>
+    <!-- Gráfico decorativo: una onda seno sobre su eje -->
+    <svg class="onda" viewBox="0 0 1200 80" preserveAspectRatio="none" aria-hidden="true">
+      <line x1="0" y1="40" x2="1200" y2="40" />
+      <path d="M0,40 Q75,-20 150,40 T300,40 T450,40 T600,40 T750,40 T900,40 T1050,40 T1200,40" />
+    </svg>
+  </header>
+
+  <main class="contenedor">
+
+    <!-- ================= INICIO ================= -->
+    <section id="inicio" class="inicio">
+      <h2>Elegí un módulo</h2>
+      <ul class="tarjetas">
+        <li>
+          <a class="tarjeta" href="#potencias">
+            <span class="numero">Módulo 1</span>
+            <h3>Potenciación y radicación</h3>
+            <div class="formula-tarjeta">\(a^m \cdot a^n = a^{m+n}\)</div>
+            <p>Propiedades de las potencias, operaciones con radicales y racionalización.</p>
+          </a>
+        </li>
+        <li>
+          <a class="tarjeta" href="#valor-absoluto">
+            <span class="numero">Módulo 2</span>
+            <h3>Valor absoluto</h3>
+            <div class="formula-tarjeta">\(|x| \le a \iff -a \le x \le a\)</div>
+            <p>Distancias, ecuaciones, inecuaciones y la función valor absoluto.</p>
+          </a>
+        </li>
+        <li>
+          <a class="tarjeta" href="#por-partes">
+            <span class="numero">Módulo 3</span>
+            <h3>Funciones por partes y parte entera</h3>
+            <div class="formula-tarjeta">\([x] = n \iff n \le x \lt n+1\)</div>
+            <p>Funciones a trozos, continuidad y la función escalón.</p>
+          </a>
+        </li>
+        <li>
+          <a class="tarjeta" href="#trigonometria">
+            <span class="numero">Módulo 4</span>
+            <h3>Trigonometría</h3>
+            <div class="formula-tarjeta">\(180^\circ = \pi \text{ rad}\)</div>
+            <p>Radianes, seno, coseno, tangente y modelos de fenómenos periódicos.</p>
+          </a>
+        </li>
+        <li>
+          <a class="tarjeta" href="#recta">
+            <span class="numero">Módulo 5</span>
+            <h3>La recta</h3>
+            <div class="formula-tarjeta">\(y = mx + b\)</div>
+            <p>Todas las formas de la ecuación, paralelas, perpendiculares e intersección.</p>
+          </a>
+        </li>
+        <li>
+          <a class="tarjeta" href="#conicas">
+            <span class="numero">Módulo 6</span>
+            <h3>Cónicas</h3>
+            <div class="formula-tarjeta">\((x-h)^2 + (y-k)^2 = r^2\)</div>
+            <p>La circunferencia y la parábola como lugares geométricos.</p>
+          </a>
+        </li>
+        <li>
+          <a class="tarjeta" href="#intersecciones">
+            <span class="numero">Módulo 7</span>
+            <h3>Intersecciones</h3>
+            <div class="formula-tarjeta">\(\Delta = b^2 - 4ac\)</div>
+            <p>Recta con circunferencia, recta con parábola y el discriminante.</p>
+          </a>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ================= MÓDULO 1 ================= -->
+    <article id="potencias" class="modulo" hidden>
+      <a class="volver" href="#inicio">← Volver</a>
+      <h2 tabindex="-1">Potenciación y radicación</h2>
+
+      <div class="pestanas" role="tablist">
+        <button class="pestana" role="tab" data-tab="teoria">📖 Teoría</button>
+        <button class="pestana" role="tab" data-tab="graficos">📈 Gráficos</button>
+        <button class="pestana" role="tab" data-tab="ejemplos">💻 Ejemplos</button>
+        <button class="pestana" role="tab" data-tab="practica">✏️ Práctica</button>
+      </div>
+
+      <div class="hoja panel" role="tabpanel" data-panel="teoria">
+        <h3>Propiedades de la potenciación</h3>
+        <p>La potenciación de una base \(a \in \mathbb{R}\) con exponente entero \(n \in \mathbb{Z}\) resume la multiplicación repetida de la base por sí misma.</p>
+        <div class="tabla">
+          <table>
+            <thead><tr><th>Propiedad</th><th>Fórmula</th><th>Qué dice</th></tr></thead>
+            <tbody>
+              <tr><td>Producto de igual base</td><td>\(a^m \cdot a^n = a^{m+n}\)</td><td>Se suman los exponentes.</td></tr>
+              <tr><td>Cociente de igual base</td><td>\(\dfrac{a^m}{a^n} = a^{m-n}\ \ (a \neq 0)\)</td><td>Se restan los exponentes.</td></tr>
+              <tr><td>Potencia de una potencia</td><td>\((a^m)^n = a^{m \cdot n}\)</td><td>Se multiplican los exponentes.</td></tr>
+              <tr><td>Exponente cero</td><td>\(a^0 = 1\ \ (a \neq 0)\)</td><td>Todo número no nulo elevado a cero da 1.</td></tr>
+              <tr><td>Potencia de un producto</td><td>\((a \cdot b)^n = a^n \cdot b^n\)</td><td>La potencia se distribuye en la multiplicación.</td></tr>
+              <tr><td>Potencia de un cociente</td><td>\(\left(\dfrac{a}{b}\right)^n = \dfrac{a^n}{b^n}\ \ (b \neq 0)\)</td><td>La potencia se distribuye en la división.</td></tr>
+              <tr><td>Exponente negativo</td><td>\(a^{-n} = \dfrac{1}{a^n}\ \ (a \neq 0)\)</td><td>Se invierte la base y el exponente pasa a positivo.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Suma y resta de radicales</h3>
+        <p>Solo se pueden sumar o restar <strong>radicales semejantes</strong>: los que tienen el mismo índice y el mismo radicando. Si no lo son a simple vista, primero se simplifican extrayendo factores.</p>
+        <ol>
+          <li>Descomponer los radicandos en factores para encontrar el radical común.</li>
+          <li>Agrupar los coeficientes que multiplican a los radicales semejantes.</li>
+          <li>Sumar o restar los coeficientes y mantener el radical.</li>
+        </ol>
+        <div class="formula">\[c_1\sqrt[n]{a} + c_2\sqrt[n]{a} = (c_1 + c_2)\sqrt[n]{a}\]</div>
+
+        <h3>Producto y cociente de radicales</h3>
+        <h4>Igual índice</h4>
+        <p>Se escribe un único radical con el mismo índice y se operan los radicandos.</p>
+        <div class="formula">\[\sqrt[n]{a} \cdot \sqrt[n]{b} = \sqrt[n]{a \cdot b} \qquad \frac{\sqrt[n]{a}}{\sqrt[n]{b}} = \sqrt[n]{\frac{a}{b}}\]</div>
+        <h4>Distinto índice</h4>
+        <ol>
+          <li>Hallar el m.c.m. de los índices.</li>
+          <li>Llevar cada raíz a ese índice común y elevar su radicando a la potencia correspondiente.</li>
+          <li>Operar bajo un único radical y simplificar.</li>
+        </ol>
+
+        <h3>Racionalización de denominadores</h3>
+        <p>Racionalizar es transformar una fracción con raíces en el denominador en otra equivalente sin raíces abajo.</p>
+        <h4>Caso 1: denominador monomio</h4>
+        <p>Si el denominador es \(\sqrt[n]{a^k}\) con \(k \lt n\), se multiplica arriba y abajo por \(\sqrt[n]{a^{n-k}}\):</p>
+        <div class="formula">\[\sqrt[n]{a^k} \cdot \sqrt[n]{a^{n-k}} = \sqrt[n]{a^{k+(n-k)}} = \sqrt[n]{a^n} = a\]</div>
+        <p>Con raíz cuadrada queda: \(\dfrac{1}{\sqrt{a}} = \dfrac{\sqrt{a}}{a}\ \ (a \gt 0)\).</p>
+        <h4>Caso 2: denominador binomio (conjugado)</h4>
+        <p>Si el denominador es del tipo \(\sqrt{a} \pm \sqrt{b}\) o \(\sqrt{a} \pm b\), se multiplica arriba y abajo por su <strong>conjugado</strong> (el mismo binomio con el signo central cambiado) y se aplica la diferencia de cuadrados:</p>
+        <div class="formula">\[(u+v)(u-v) = u^2 - v^2\]</div>
+        <div class="formula">\[\frac{1}{\sqrt{a} - \sqrt{b}} = \frac{\sqrt{a} + \sqrt{b}}{a - b} \quad (a \neq b,\ a, b \ge 0)\]</div>
+
+        <div class="nota"><strong>Error frecuente:</strong> la radicación no se distribuye en la suma ni en la resta. Por ejemplo, \(\sqrt{x^2 + y^2} \neq x + y\).</div>
+      </div>
+
+      <div class="hoja panel" role="tabpanel" data-panel="graficos" hidden>
+        <h3>Gráficos interactivos</h3>
+        <p>La función exponencial muestra las propiedades de las potencias: el exponente cero y los exponentes negativos.</p>
+        <figure class="grafico" data-grafico="exponencial"></figure>
+        <figure class="grafico" data-grafico="potencias"></figure>
+      </div>
+
+      <div class="hoja panel" role="tabpanel" data-panel="ejemplos" hidden>
+        <h3>Propiedades de las potencias</h3>
+        <ul>
+          <li>Producto: \(4^{-3} \cdot 4^2 = 4^{-3+2} = 4^{-1} = \dfrac{1}{4}\)</li>
+          <li>Cociente: \(\dfrac{4^2}{4^1} = 4^{2-1} = 4\)</li>
+          <li>Potencia de potencia: \((2x^3)^2 = 2^2 \cdot (x^3)^2 = 4x^6\)</li>
+          <li>Exponente cero: \(3^0 = 1\)</li>
+          <li>Potencia de un producto: \((2 \cdot 3)^5 = 2^5 \cdot 3^5 = 32 \cdot 243 = 7776\)</li>
+          <li>Potencia de un cociente: \(\left(\dfrac{a^2 b^{-1}}{3}\right)^3 = \dfrac{a^6 b^{-3}}{27} = \dfrac{a^6}{27b^3}\)</li>
+          <li>Exponente negativo: \(a^{-2} = \dfrac{1}{a^2}\)</li>
+        </ul>
+
+        <h3>Suma de radicales</h3>
+        <p>Resolver \(\sqrt{12} - 3\sqrt{3} + 2\sqrt{75}\).</p>
+        <p>Se simplifican los radicales:</p>
+        <div class="formula">\[\sqrt{12} = \sqrt{4 \cdot 3} = 2\sqrt{3} \qquad 2\sqrt{75} = 2\sqrt{25 \cdot 3} = 10\sqrt{3}\]</div>
+        <p>Se agrupan los semejantes:</p>
+        <div class="formula">\[2\sqrt{3} - 3\sqrt{3} + 10\sqrt{3} = (2 - 3 + 10)\sqrt{3} = 9\sqrt{3}\]</div>
+
+        <h3>Producto con igual índice</h3>
+        <div class="formula">\[\sqrt{2} \cdot \sqrt{6} = \sqrt{12} = 2\sqrt{3}\]</div>
+
+        <h3>Producto con distinto índice</h3>
+        <p>Multiplicar \(\sqrt[3]{x^2} \cdot \sqrt{x}\).</p>
+        <ol>
+          <li>m.c.m. de los índices: \(\text{m.c.m.}(3, 2) = 6\).</li>
+          <li>Llevar a índice 6: \(\sqrt[3]{x^2} = \sqrt[6]{x^4}\) y \(\sqrt{x} = \sqrt[6]{x^3}\).</li>
+          <li>Unificar: \(\sqrt[6]{x^4 \cdot x^3} = \sqrt[6]{x^7} = \sqrt[6]{x^6 \cdot x} = x\sqrt[6]{x}\).</li>
+        </ol>
+
+        <h3>Racionalización con raíz n-ésima</h3>
+        <p>Para racionalizar \(\dfrac{1}{\sqrt[5]{x^3}}\) se multiplica por \(\dfrac{\sqrt[5]{x^2}}{\sqrt[5]{x^2}}\):</p>
+        <div class="formula">\[\frac{1}{\sqrt[5]{x^3}} \cdot \frac{\sqrt[5]{x^2}}{\sqrt[5]{x^2}} = \frac{\sqrt[5]{x^2}}{\sqrt[5]{x^5}} = \frac{\sqrt[5]{x^2}}{x}\]</div>
+
+        <h3>Racionalización con conjugado</h3>
+        <div class="formula">\[\frac{1}{\sqrt{a} - \sqrt{b}} = \frac{1 \cdot (\sqrt{a} + \sqrt{b})}{(\sqrt{a} - \sqrt{b})(\sqrt{a} + \sqrt{b})} = \frac{\sqrt{a} + \sqrt{b}}{a - b}\]</div>
+      </div>
+
+      <div class="hoja panel" role="tabpanel" data-panel="practica" hidden>
+        <h3>Ejercicios</h3>
+        <div class="ejercicio">
+          <p><strong>1.</strong> Simplificá \((2x^3)^2 \cdot x^{-4}\).</p>
+          <details><summary>Ver solución</summary>
+            <div class="solucion"><p>\((2x^3)^2 = 4x^6\), luego \(4x^6 \cdot x^{-4} = 4x^{6-4} = 4x^2\).</p></div>
+          </details>
+        </div>
+        <div class="ejercicio">
+          <p><strong>2.</strong> Resolvé \(\sqrt{18} + 2\sqrt{8} - \sqrt{50}\).</p>
+          <details><summary>Ver solución</summary>
+            <div class="solucion"><p>\(\sqrt{18} = 3\sqrt{2}\), \(2\sqrt{8} = 4\sqrt{2}\), \(\sqrt{50} = 5\sqrt{2}\).</p><p>\(3\sqrt{2} + 4\sqrt{2} - 5\sqrt{2} = 2\sqrt{2}\)</p></div>
+          </details>
+        </div>
+        <div class="ejercicio">
+          <p><strong>3.</strong> Expresá \(\sqrt{3} \cdot \sqrt[3]{3}\) como un único radical.</p>
+          <details><summary>Ver solución</summary>
+            <div class="solucion"><p>m.c.m.(2, 3) = 6: \(\sqrt{3} = \sqrt[6]{3^3}\) y \(\sqrt[3]{3} = \sqrt[6]{3^2}\).</p><p>\(\sqrt[6]{3^3 \cdot 3^2} = \sqrt[6]{3^5}\)</p></div>
+          </details>
+        </div>
+        <div class="ejercicio">
+          <p><strong>4.</strong> Racionalizá \(\dfrac{2}{\sqrt{5}}\).</p>
+          <details><summary>Ver solución</summary>
+            <div class="solucion"><p>\(\dfrac{2}{\sqrt{5}} \cdot \dfrac{\sqrt{5}}{\sqrt{5}} = \dfrac{2\sqrt{5}}{5}\)</p></div>
+          </details>
+        </div>
+        <div class="ejercicio">
+          <p><strong>5.</strong> Racionalizá \(\dfrac{1}{\sqrt{5} - \sqrt{3}}\).</p>
+          <details><summary>Ver solución</summary>
+            <div class="solucion"><p>Se multiplica por el conjugado \(\sqrt{5} + \sqrt{3}\):</p><p>\(\dfrac{\sqrt{5} + \sqrt{3}}{5 - 3} = \dfrac{\sqrt{5} + \sqrt{3}}{2}\)</p></div>
+          </details>
+        </div>
+      </div>
+    </article>
+
+    <!-- ================= MÓDULO 2 ================= -->
+    <article id="valor-absoluto" class="modulo" hidden>
+      <a class="volver" href="#inicio">← Volver</a>
+      <h2 tabindex="-1">Valor absoluto</h2>
+
+      <div class="pestanas" role="tablist">
+        <button class="pestana" role="tab" data-tab="teoria">📖 Teoría</button>
+        <button class="pestana" role="tab" data-tab="graficos">📈 Gráficos</button>
+        <button class="pestana" role="tab" data-tab="ejemplos">💻 Ejemplos</button>
+        <button class="pestana" role="tab" data-tab="practica">✏️ Práctica</button>
+      </div>
+
+      <div class="hoja panel" role="tabpanel" data-panel="teoria">
+        <h3>Definición</h3>
+        <p>El valor absoluto de un número real \(x\), escrito \(|x|\), es la <strong>distancia</strong> de \(x\) al 0 en la recta numérica. Como una distancia nunca es negativa, \(|x| \ge 0\).</p>
+        <div class="formula">\[|x| = \begin{cases} x &amp; \text{si } x \ge 0 \\ -x &amp; \text{si } x \lt 0 \end{cases}\]</div>
+        <p>La distancia entre dos números \(a\) y \(b\) es \(|a - b| = |b - a|\).</p>
+
+        <h3>Propiedades</h3>
+        <ul>
+          <li>No negatividad: \(|x| \ge 0\) para todo \(x \in \mathbb{R}\).</li>
+          <li>Simetría: \(|x| = |-x|\).</li>
+          <li>Valor nulo: \(|x| = 0 \iff x = 0\).</li>
+          <li>Igualdad de valores absolutos: \(|x| = |y| \iff x = y\) o \(x = -y\).</li>
+          <li>Desigualdad triangular: \(|a + b| \le |a| + |b|\). La igualdad se cumple solo si \(a\) y \(b\) tienen el mismo signo o alguno es cero (\(a \cdot b \ge 0\)). Si tienen signos opuestos, la desigualdad es estricta.</li>
+        </ul>
+
+        <h3>Ecuaciones</h3>
+        <ul>
+          <li>\(|x| = a\) con \(a \ge 0\): \(x = a\) o \(x = -a\).</li>
+          <li>\(c\,|ax + b| = d\): primero se despeja el módulo, \(|ax + b| = \dfrac{d}{c}\), y después se resuelven los dos casos \(ax + b = \dfrac{d}{c}\) o \(ax + b = -\dfrac{d}{c}\).</li>
+          <li>\(|ax + b| = |cx + d|\): se resuelven \(ax + b = cx + d\) o \(ax + b = -(cx + d)\).</li>
+        </ul>
+
+        <h3>Inecuaciones</h3>
+        <h4>"Menor que": intervalo acotado (conector "y")</h4>
+        <div class="formula">\[|x| \le a \iff -a \le x \le a \iff x \in [-a, a]\]</div>
+        <div class="formula">\[|x - c| \le r \iff c - r \le x \le c + r\]</div>
+        <h4>"Mayor que": unión de intervalos (conector "o")</h4>
+        <div class="formula">\[|x| \ge a \iff x \le -a \ \text{ o } \ x \ge a \iff x \in (-\infty, -a] \cup [a, \infty)\]</div>
+        <div class="formula">\[|x - c| \gt r \iff x \lt c - r \ \text{ o } \ x \gt c + r\]</div>
+        <p>Con \(\lt\) o \(\gt\) estrictos, los extremos quedan abiertos.</p>
+
+        <h3>La función \(f(x) = |x|\)</h3>
+        <ul>
+          <li>Dominio: \(\mathbb{R}\)</li>
+          <li>Imagen: \([0, \infty)\)</li>
+          <li>Gráfica: forma de "V" con vértice en \((0, 0)\), simétrica respecto del eje \(y\).</li>
+        </ul>
+        <h4>Transformaciones de \(g(x) = a\,|x + h| + k\)</h4>
+        <ul>
+          <li><strong>\(h\):</strong> si \(h \gt 0\) la gráfica se corre \(h\) unidades a la izquierda; si \(h \lt 0\), \(|h|\) unidades a la derecha.</li>
+          <li><strong>\(k\):</strong> si \(k \gt 0\) se corre hacia arriba; si \(k \lt 0\), hacia abajo.</li>
+          <li><strong>Vértice:</strong> \(V = (-h, k)\).</li>
+          <li><strong>\(a\):</strong> si \(|a| \gt 1\) las ramas se cierran; si \(0 \lt |a| \lt 1\) se abren; si \(a \lt 0\) la "V" se da vuelta y abre hacia abajo.</li>
+        </ul>
+
+      </div>
+
+      <div class="hoja panel" role="tabpanel" data-panel="graficos" hidden>
+        <h3>Gráficos interactivos</h3>
+        <p>Mové a, h y k para ver cómo se transforma la "V".</p>
+        <figure class="grafico" data-grafico="valorAbsoluto"></figure>
+      </div>
+
+      <div class="hoja panel" role="tabpanel" data-panel="ejemplos" hidden>
+        <h3>Distancias</h3>
+        <ul>
+          <li>\(|8 - 3| = 5\) es la distancia entre 8 y 3.</li>
+          <li>\(|4 + 5| = |4 - (-5)| = 9\) es la distancia entre 4 y −5.</li>
+          <li>\(|x - 3|\) es la distancia entre \(x\) y 3.</li>
+          <li>\(|x + 2| = |x - (-2)|\) es la distancia entre \(x\) y −2.</li>
+        </ul>
+
+        <h3>Verdadero o falso</h3>
+        <ul>
+          <li>\(|-5 - (-3)| = |-3 - (-5)|\): <strong>Verdadero</strong>, porque \(|-2| = |2| = 2\).</li>
+          <li>\(|10 + (-14)| = |10| + |-14|\): <strong>Falso</strong>, porque \(|-4| = 4\) y \(10 + 14 = 24\).</li>
+          <li>\(|-3 + 8| \lt |-3| + |8|\): <strong>Verdadero</strong>, porque \(5 \lt 11\).</li>
+          <li>\(|3 - \pi| = |\pi - 3|\): <strong>Verdadero</strong>, la distancia no depende del orden.</li>
+          <li>\(|x| = |y| \iff x = y\): <strong>Falso</strong>, por ejemplo \(|-4| = |4|\) pero \(-4 \neq 4\).</li>
+          <li>Si \(x \lt y\) entonces \(|x| \lt |y|\): <strong>Falso</strong>, con \(x = -7\), \(y = 2\) queda \(|-7| = 7 \gt 2\).</li>
+          <li>\(|x| = |-x|\): <strong>Verdadero</strong>, un número y su opuesto están a la misma distancia del 0.</li>
+        </ul>
+
+        <h3>Desigualdad triangular</h3>
+        <ul>
+          <li>\(a = 3\), \(b = 8\) (mismo signo): \(|3 + 8| = 11 = |3| + |8|\).</li>
+          <li>\(a = -3\), \(b = 8\) (signos opuestos): \(|-3 + 8| = 5 \lt 11 = |-3| + |8|\).</li>
+        </ul>
+
+        <h3>Transformaciones</h3>
+        <ul>
+          <li>\(f(x) = |x + 1|\): se corre 1 unidad a la izquierda, vértice en \((-1, 0)\).</li>
+          <li>\(h(x) = |x - 1| - 2\): se corre 1 unidad a la derecha y 2 hacia abajo, vértice en \((1, -2)\).</li>
+        </ul>
+      </div>
+
+      <div class="hoja panel" role="tabpanel" data-panel="practica" hidden>
+        <h3>Ejercicios</h3>
+        <div class="ejercicio">
+          <p><strong>1.</strong> Resolvé \(|x - 3| = 5\).</p>
+          <details><summary>Ver solución</summary>
+            <div class="solucion"><p>\(x - 3 = 5 \Rightarrow x = 8\) o \(x - 3 = -5 \Rightarrow x = -2\).</p></div>
+          </details>
+        </div>
+        <div class="ejercicio">
+          <p><strong>2.</strong> Resolvé \(2\,|x + 1| = 6\).</p>
+          <details><summary>Ver solución</summary>
+            <div class="solucion"><p>\(|x + 1| = 3\), entonces \(x + 1 = 3 \Rightarrow x = 2\) o \(x + 1 = -3 \Rightarrow x = -4\).</p></div>
+          </details>
+        </div>
+        <div class="ejercicio">
+          <p><strong>3.</strong> Resolvé \(|x - 2| \le 3\).</p>
+          <details><summary>Ver solución</summary>
+            <div class="solucion"><p>\(2 - 3 \le x \le 2 + 3\), es decir \(x \in [-1, 5]\).</p></div>
+          </details>
+        </div>
+        <div class="ejercicio">
+          <p><strong>4.</strong> Resolvé \(|x| \gt 4\).</p>
+          <details><summary>Ver solución</summary>
+            <div class="solucion"><p>\(x \lt -4\) o \(x \gt 4\), es decir \(x \in (-\infty, -4) \cup (4, \infty)\).</p></div>
+          </details>
+        </div>
+        <div class="ejercicio">
+          <p><strong>5.</strong> ¿Dónde está el vértice de \(g(x) = -2\,|x - 3| + 1\) y hacia dónde abre?</p>
+          <details><summary>Ver solución</summary>
+            <div class="solucion"><p>Acá \(h = -3\) y \(k = 1\), así que \(V = (3, 1)\). Como \(a = -2 \lt 0\), abre hacia abajo, y como \(|a| \gt 1\), las ramas son más cerradas.</p></div>
+          </details>
+        </div>
+      </div>
+    </article>
+
+    <!-- ================= MÓDULO 3 ================= -->
+    <article id="por-partes" class="modulo" hidden>
+      <a class="volver" href="#inicio">← Volver</a>
+      <h2 tabindex="-1">Funciones por partes y parte entera</h2>
+
+      <div class="pestanas" role="tablist">
+        <button class="pestana" role="tab" data-tab="teoria">📖 Teoría</button>
+        <button class="pestana" role="tab" data-tab="graficos">📈 Gráficos</button>
+        <button class="pestana" role="tab" data-tab="ejemplos">💻 Ejemplos</button>
+        <button class="pestana" role="tab" data-tab="practica">✏️ Práctica</button>
+      </div>
+
+      <div class="hoja panel" role="tabpanel" data-panel="teoria">
+        <h3>Funciones definidas por partes</h3>
+        <p>Son funciones cuya fórmula cambia según el intervalo en el que esté \(x\).</p>
+        <div class="formula">\[f(x) = \begin{cases} g(x) &amp; \text{si } x \lt c \\ h(x) &amp; \text{si } x \ge c \end{cases}\]</div>
+        <ul>
+          <li><strong>Evaluar:</strong> para calcular \(f(x_0)\) se busca en qué tramo está \(x_0\) y se usa solo esa fórmula.</li>
+          <li><strong>Dominio:</strong> la unión de los subdominios, \(\text{Dom}(f) = D_1 \cup D_2 \cup \dots \cup D_n\).</li>
+          <li><strong>Imagen:</strong> la unión de las imágenes de cada tramo.</li>
+        </ul>
+
+        <h3>Continuidad en el punto de corte</h3>
+        <p>Sea \(x = c\) la frontera entre \(f_1(x)\) (para \(x \lt c\)) y \(f_2(x)\) (para \(x \ge c\)):</p>
+        <ol>
+          <li>Calcular \(f(c)\) con el tramo que incluye a \(c\).</li>
+          <li>Calcular los límites laterales: \(\displaystyle\lim_{x \to c^-} f_1(x)\) y \(\displaystyle\lim_{x \to c^+} f_2(x)\).</li>
+          <li>Es continua en \(c\) si y solo si:</li>
+        </ol>
+        <div class="formula">\[\lim_{x \to c^-} f(x) = \lim_{x \to c^+} f(x) = f(c)\]</div>
+        <p>Si los límites laterales son distintos, hay una <strong>discontinuidad de salto</strong>.</p>
+
+        <h3>Función parte entera</h3>
+        <p>A cada número real \(x\) le asigna el <strong>mayor entero menor o igual</strong> que \(x\).</p>
+        <div class="formula">\[[x] = n \iff n \le x \lt n + 1, \quad n \in \mathbb{Z}\]</div>
+        <ul>
+          <li>Para \(x \ge 0\) se queda con la parte entera: \([4{,}7] = 4\), \([12{,}99] = 12\).</li>
+          <li>Para \(x \lt 0\) baja al entero de la izquierda: \([-1{,}2] = -2\), no \(-1\).</li>
+          <li>Dominio: \(\mathbb{R}\). Imagen: \(\mathbb{Z}\).</li>
+          <li>Gráfica: escalones horizontales \([n, n+1)\), cerrados a la izquierda y abiertos a la derecha, con saltos de 1 en cada entero.</li>
+        </ul>
+
+        <h4>Ecuación \([x] = k\)</h4>
+        <p>La solución no es un punto, es un intervalo:</p>
+        <div class="formula">\[[x] = k \iff k \le x \lt k + 1 \iff x \in [k, k + 1)\]</div>
+        <p>Sumar una constante, \([x] + k\), sube o baja todos los escalones \(k\) unidades.</p>
+      </div>
+
+      <div class="hoja panel" role="tabpanel" data-panel="graficos" hidden>
+        <h3>Gráficos interactivos</h3>
+        <p>Cada tramo se dibuja solo en su intervalo. Pasá el mouse para ver qué fórmula se usa en cada x.</p>
+        <figure class="grafico" data-grafico="porPartes"></figure>
+        <figure class="grafico" data-grafico="parteEntera"></figure>
+      </div>
+
+      <div class="hoja panel" role="tabpanel" data-panel="ejemplos" hidden>
+        <h3>Envíos postales según el peso</h3>
+        <p>$2500 hasta 5 kg, $4000 de más de 5 kg hasta 15 kg y $6500 de más de 15 kg:</p>
+        <div class="formula">\[P(x) = \begin{cases} 2500 &amp; \text{si } 0 \lt x \le 5 \\ 4000 &amp; \text{si } 5 \lt x \le 15 \\ 6500 &amp; \text{si } x \gt 15 \end{cases}\]</div>
+        <p>Dominio: \((0, \infty)\). Imagen: \(\{2500, 4000, 6500\}\). Tiene saltos en \(x = 5\) y \(x = 15\).</p>
+
+        <h3>Entrada a un parque de diversiones</h3>
+        <div class="formula">\[E(x) = \begin{cases} 0 &amp; \text{si } 0 \le x \lt 5 \\ 3000 &amp; \text{si } 5 \le x \le 12 \\ 5000 &amp; \text{si } 12 \lt x \le 65 \\ 2500 &amp; \text{si } x \gt 65 \end{cases}\]</div>
+        <p>Dominio: \([0, \infty)\). Imagen: \(\{0, 2500, 3000, 5000\}\).</p>
+
+        <h3>Estudio de continuidad</h3>
+        <div class="formula">\[g(x) = \begin{cases} 2x + 5 &amp; \text{si } x \lt -1 \\ x^2 + 2 &amp; \text{si } -1 \le x \le 3 \\ -x + 8 &amp; \text{si } x \gt 3 \end{cases}\]</div>
+        <h4>En \(x = -1\)</h4>
+        <p>\(g(-1) = (-1)^2 + 2 = 3\). Por izquierda: \(2(-1) + 5 = 3\). Por derecha: \((-1)^2 + 2 = 3\).</p>
+        <p>Los tres valores coinciden: es <strong>continua</strong> en \(x = -1\).</p>
+        <h4>En \(x = 3\)</h4>
+        <p>\(g(3) = 3^2 + 2 = 11\). Por izquierda: \(11\). Por derecha: \(-3 + 8 = 5\).</p>
+        <p>Como \(11 \neq 5\), es <strong>discontinua</strong> en \(x = 3\), con un salto de 6 unidades.</p>
+
+        <h3>Parte entera</h3>
+        <ul>
+          <li>\([4{,}7] = 4\), \([8] = 8\), \([0] = 0\), \([12{,}99] = 12\)</li>
+          <li>\([-1{,}2] = -2\) porque \(-2 \le -1{,}2 \lt -1\)</li>
+          <li>\([-0{,}3] = -1\) porque \(-1 \le -0{,}3 \lt 0\)</li>
+          <li>\([-4{,}9] = -5\) porque \(-5 \le -4{,}9 \lt -4\)</li>
+        </ul>
+        <h4>Ecuaciones</h4>
+        <ul>
+          <li>\([x] = 3 \Rightarrow 3 \le x \lt 4 \Rightarrow x \in [3, 4)\)</li>
+          <li>\([x] = -2 \Rightarrow -2 \le x \lt -1 \Rightarrow x \in [-2, -1)\)</li>
+          <li>\([x - 1] = 2 \Rightarrow 2 \le x - 1 \lt 3 \Rightarrow 3 \le x \lt 4 \Rightarrow x \in [3, 4)\)</li>
+        </ul>
+
+        <h3>Taxímetro</h3>
+        <p>Un taxi cobra $1000 de bajada de bandera más $1000 por cada kilómetro <strong>completo</strong>:</p>
+        <div class="formula">\[f(x) = 1000 + 1000 \cdot [x]\]</div>
+        <p>0,1 km cuesta $1000; 0,9 km cuesta $1000; 1,1 km cuesta $2000. El precio sube en escalones cada vez que \(x\) llega a un entero.</p>
+      </div>
+
+      <div class="hoja panel" role="tabpanel" data-panel="practica" hidden>
+        <h3>Ejercicios</h3>
+        <div class="ejercicio">
+          <p><strong>1.</strong> Con la función de envíos \(P(x)\), ¿cuánto cuesta enviar 5 kg? ¿Y 5,5 kg?</p>
+          <details><summary>Ver solución</summary>
+            <div class="solucion"><p>5 kg está en el tramo \(0 \lt x \le 5\): $2500. 5,5 kg está en \(5 \lt x \le 15\): $4000.</p></div>
+          </details>
+        </div>
+        <div class="ejercicio">
+          <p><strong>2.</strong> Calculá \([3{,}6]\), \([-2{,}5]\) y \([7]\).</p>
+          <details><summary>Ver solución</summary>
+            <div class="solucion"><p>\([3{,}6] = 3\), \([-2{,}5] = -3\), \([7] = 7\).</p></div>
+          </details>
+        </div>
+        <div class="ejercicio">
+          <p><strong>3.</strong> Resolvé \([x] = -3\).</p>
+          <details><summary>Ver solución</summary>
+            <div class="solucion"><p>\(-3 \le x \lt -2\), es decir \(x \in [-3, -2)\).</p></div>
+          </details>
+        </div>
+        <div class="ejercicio">
+          <p><strong>4.</strong> Estudiá la continuidad en \(x = 2\) de \(f(x) = \begin{cases} x + 1 &amp; \text{si } x \lt 2 \\ 3x - 3 &amp; \text{si } x \ge 2 \end{cases}\)</p>
+          <details><summary>Ver solución</summary>
+            <div class="solucion"><p>\(f(2) = 3 \cdot 2 - 3 = 3\). Por izquierda: \(2 + 1 = 3\). Por derecha: \(3\).</p><p>Todo coincide: es continua en \(x = 2\).</p></div>
+          </details>
+        </div>
+        <div class="ejercicio">
+          <p><strong>5.</strong> Con el taxímetro \(f(x) = 1000 + 1000 \cdot [x]\), ¿cuánto se paga por un viaje de 3,7 km?</p>
+          <details><summary>Ver solución</summary>
+            <div class="solucion"><p>\([3{,}7] = 3\), entonces \(f(3{,}7) = 1000 + 1000 \cdot 3 = 4000\). Se pagan $4000.</p></div>
+          </details>
+        </div>
+      </div>
+    </article>
+
+    <!-- ================= MÓDULO 4 ================= -->
+    <article id="trigonometria" class="modulo" hidden>
+      <a class="volver" href="#inicio">← Volver</a>
+      <h2 tabindex="-1">Trigonometría</h2>
+
+      <div class="pestanas" role="tablist">
+        <button class="pestana" role="tab" data-tab="teoria">📖 Teoría</button>
+        <button class="pestana" role="tab" data-tab="graficos">📈 Gráficos</button>
+        <button class="pestana" role="tab" data-tab="ejemplos">💻 Ejemplos</button>
+        <button class="pestana" role="tab" data-tab="practica">✏️ Práctica</button>
+      </div>
+
+      <div class="hoja panel" role="tabpanel" data-panel="teoria">
+        <h3>Grados y radianes</h3>
+        <p>Los ángulos se miden en el sistema sexagesimal (grados) o en el circular (radianes). La equivalencia se toma del ángulo llano:</p>
+        <div class="formula">\[180^\circ = \pi \text{ rad}\]</div>
+        <ul>
+          <li>De grados a radianes se multiplica por \(\dfrac{\pi}{180^\circ}\).</li>
+          <li>De radianes a grados se multiplica por \(\dfrac{180^\circ}{\pi}\).</li>
+        </ul>
+
+        <h3>Valores notables</h3>
+        <div class="tabla">
+          <table>
+            <thead><tr><th>Grados</th><th>Radianes</th><th>sen</th><th>cos</th><th>tan</th><th>Ubicación</th></tr></thead>
+            <tbody>
+              <tr><td>0°</td><td>\(0\)</td><td>\(0\)</td><td>\(1\)</td><td>\(0\)</td><td>Eje +x</td></tr>
+              <tr><td>30°</td><td>\(\frac{\pi}{6}\)</td><td>\(\frac{1}{2}\)</td><td>\(\frac{\sqrt{3}}{2}\)</td><td>\(\frac{\sqrt{3}}{3}\)</td><td>I</td></tr>
+              <tr><td>45°</td><td>\(\frac{\pi}{4}\)</td><td>\(\frac{\sqrt{2}}{2}\)</td><td>\(\frac{\sqrt{2}}{2}\)</td><td>\(1\)</td><td>I</td></tr>
+              <tr><td>60°</td><td>\(\frac{\pi}{3}\)</td><td>\(\frac{\sqrt{3}}{2}\)</td><td>\(\frac{1}{2}\)</td><td>\(\sqrt{3}\)</td><td>I</td></tr>
+              <tr><td>90°</td><td>\(\frac{\pi}{2}\)</td><td>\(1\)</td><td>\(0\)</td><td>No existe</td><td>Eje +y</td></tr>
+              <tr><td>135°</td><td>\(\frac{3\pi}{4}\)</td><td>\(\frac{\sqrt{2}}{2}\)</td><td>\(-\frac{\sqrt{2}}{2}\)</td><td>\(-1\)</td><td>II</td></tr>
+              <tr><td>180°</td><td>\(\pi\)</td><td>\(0\)</td><td>\(-1\)</td><td>\(0\)</td><td>Eje −x</td></tr>
+              <tr><td>225°</td><td>\(\frac{5\pi}{4}\)</td><td>\(-\frac{\sqrt{2}}{2}\)</td><td>\(-\frac{\sqrt{2}}{2}\)</td><td>\(1\)</td><td>III</td></tr>
+              <tr><td>270°</td><td>\(\frac{3\pi}{2}\)</td><td>\(-1\)</td><td>\(0\)</td><td>No existe</td><td>Eje −y</td></tr>
+              <tr><td>315°</td><td>\(\frac{7\pi}{4}\)</td><td>\(-\frac{\sqrt{2}}{2}\)</td><td>\(\frac{\sqrt{2}}{2}\)</td><td>\(-1\)</td><td>IV</td></tr>
+              <tr><td>360°</td><td>\(2\pi\)</td><td>\(0\)</td><td>\(1\)</td><td>\(0\)</td><td>Eje +x</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Seno, coseno y tangente</h3>
+        <div class="tabla">
+          <table>
+            <thead><tr><th>Propiedad</th><th>\(\operatorname{sen}(x)\)</th><th>\(\cos(x)\)</th><th>\(\tan(x)\)</th></tr></thead>
+            <tbody>
+              <tr><td>Dominio</td><td>\(\mathbb{R}\)</td><td>\(\mathbb{R}\)</td><td>\(\mathbb{R} - \{\frac{\pi}{2} + k\pi\}\)</td></tr>
+              <tr><td>Imagen</td><td>\([-1, 1]\)</td><td>\([-1, 1]\)</td><td>\(\mathbb{R}\)</td></tr>
+              <tr><td>Período</td><td>\(2\pi\)</td><td>\(2\pi\)</td><td>\(\pi\)</td></tr>
+              <tr><td>Ceros</td><td>\(x = k\pi\)</td><td>\(x = \frac{\pi}{2} + k\pi\)</td><td>\(x = k\pi\)</td></tr>
+              <tr><td>Máximos</td><td>1 en \(x = \frac{\pi}{2} + 2k\pi\)</td><td>1 en \(x = 2k\pi\)</td><td>No tiene</td></tr>
+              <tr><td>Mínimos</td><td>−1 en \(x = \frac{3\pi}{2} + 2k\pi\)</td><td>−1 en \(x = \pi + 2k\pi\)</td><td>No tiene</td></tr>
+              <tr><td>Asíntotas verticales</td><td>No tiene</td><td>No tiene</td><td>\(x = \frac{\pi}{2} + k\pi\)</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>En todos los casos \(k \in \mathbb{Z}\).</p>
+        <p><strong>¿Por qué la tangente tiene asíntotas?</strong> En la circunferencia trigonométrica, \(\tan(x)\) es la pendiente de la recta que sale del origen con ángulo \(x\). Cuando el ángulo se acerca a 90°, la recta se vuelve vertical y la pendiente crece sin límite.</p>
+
+        <h3>Parámetros de las funciones transformadas</h3>
+        <div class="formula">\[y = A + B \cdot \operatorname{sen}(C \cdot x) \qquad y = A + B \cdot \cos(C \cdot x)\]</div>
+        <ul>
+          <li><strong>Desplazamiento vertical (\(A\)):</strong> es la línea media de la onda, \(y = A\).</li>
+          <li><strong>Amplitud (\(|B|\)):</strong> cuánto se aleja la onda de la línea media.</li>
+          <li><strong>Máximo y mínimo:</strong> \(y_{\text{máx}} = A + |B|\), \(y_{\text{mín}} = A - |B|\).</li>
+          <li><strong>Período (\(T\)):</strong> lo que dura un ciclo completo, \(T = \dfrac{2\pi}{C}\).</li>
+        </ul>
+
+        <div class="nota">En el Informe Sintético la misma fórmula aparece como \(f(x) = C + A \cdot \operatorname{sen}(Bx)\). Es lo mismo con otras letras: ahí \(C\) es la línea media, \(|A|\) la amplitud y \(T = \frac{2\pi}{B}\).</div>
+      </div>
+
+      <div class="hoja panel" role="tabpanel" data-panel="graficos" hidden>
+        <h3>Gráficos interactivos</h3>
+        <p>Primero las tres funciones básicas y después la función transformada con sus parámetros.</p>
+        <figure class="grafico" data-grafico="trigBasicas"></figure>
+        <figure class="grafico" data-grafico="trigonometria"></figure>
+      </div>
+
+      <div class="hoja panel" role="tabpanel" data-panel="ejemplos" hidden>
+        <h3>Conversiones</h3>
+        <ul>
+          <li>\(60^\circ \cdot \dfrac{\pi}{180^\circ} = \dfrac{\pi}{3}\) rad</li>
+          <li>\(\dfrac{3\pi}{4} \cdot \dfrac{180^\circ}{\pi} = 135^\circ\)</li>
+        </ul>
+
+        <h3>El haz de luz de un faro</h3>
+        <div class="formula">\[h(t) = 15 + 10 \cdot \operatorname{sen}\left(\frac{\pi}{6}\, t\right)\]</div>
+        <ul>
+          <li>Parámetros: \(A = 15\), \(B = 10\), \(C = \frac{\pi}{6}\).</li>
+          <li>Altura máxima: \(15 + 10 = 25\) m.</li>
+          <li>Altura mínima: \(15 - 10 = 5\) m.</li>
+          <li>Altura media: 15 m.</li>
+          <li>Período: \(T = \dfrac{2\pi}{\pi/6} = 2\pi \cdot \dfrac{6}{\pi} = 12\) unidades de tiempo.</li>
+        </ul>
+
+        <h3>Profundidad del agua en un puerto</h3>
+        <div class="formula">\[P(x) = -8 + 3 \cdot \cos\left(\frac{\pi}{4}\, x\right)\]</div>
+        <ul>
+          <li>Línea media: \(-8\) m. Amplitud: \(|B| = 3\) m.</li>
+          <li>Profundidad máxima: \(-8 + 3 = -5\) m (5 m bajo el nivel de referencia).</li>
+          <li>Profundidad mínima: \(-8 - 3 = -11\) m (11 m bajo el nivel de referencia).</li>
+          <li>Período: \(T = \dfrac{2\pi}{\pi/4} = 8\) horas.</li>
+        </ul>
+        <p>Los valores negativos indican profundidad medida por debajo del cero de referencia del puerto.</p>
+      </div>
+
+      <div class="hoja panel" role="tabpanel" data-panel="practica" hidden>
+        <h3>Ejercicios</h3>
+        <div class="ejercicio">
+          <p><strong>1.</strong> Pasá 150° a radianes.</p>
+          <details><summary>Ver solución</summary>
+            <div class="solucion"><p>\(150^\circ \cdot \dfrac{\pi}{180^\circ} = \dfrac{5\pi}{6}\) rad</p></div>
+          </details>
+        </div>
+        <div class="ejercicio">
+          <p><strong>2.</strong> Pasá \(\dfrac{7\pi}{4}\) rad a grados.</p>
+          <details><summary>Ver solución</summary>
+            <div class="solucion"><p>\(\dfrac{7\pi}{4} \cdot \dfrac{180^\circ}{\pi} = 315^\circ\)</p></div>
+          </details>
+        </div>
+        <div class="ejercicio">
+          <p><strong>3.</strong> Sin calculadora: \(\operatorname{sen}\left(\frac{\pi}{6}\right)\), \(\cos(\pi)\) y \(\tan\left(\frac{\pi}{4}\right)\).</p>
+          <details><summary>Ver solución</summary>
+            <div class="solucion"><p>\(\frac{1}{2}\), \(-1\) y \(1\).</p></div>
+          </details>
+        </div>
+        <div class="ejercicio">
+          <p><strong>4.</strong> Para \(y = 2 + 4 \cdot \operatorname{sen}\left(\frac{\pi}{2}\, x\right)\), hallá máximo, mínimo y período.</p>
+          <details><summary>Ver solución</summary>
+            <div class="solucion"><p>Máximo: \(2 + 4 = 6\). Mínimo: \(2 - 4 = -2\).</p><p>Período: \(T = \dfrac{2\pi}{\pi/2} = 4\).</p></div>
+          </details>
+        </div>
+        <div class="ejercicio">
+          <p><strong>5.</strong> ¿Por qué \(\tan(90^\circ)\) no existe?</p>
+          <details><summary>Ver solución</summary>
+            <div class="solucion"><p>Porque \(\tan(x) = \dfrac{\operatorname{sen}(x)}{\cos(x)}\) y \(\cos(90^\circ) = 0\). Geométricamente, la recta es vertical y su pendiente no está definida: ahí hay una asíntota.</p></div>
+          </details>
+        </div>
+      </div>
+    </article>
+
+    <!-- ================= MÓDULO 5 ================= -->
+    <article id="recta" class="modulo" hidden>
+      <a class="volver" href="#inicio">← Volver</a>
+      <h2 tabindex="-1">La recta</h2>
+
+      <div class="pestanas" role="tablist">
+        <button class="pestana" role="tab" data-tab="teoria">📖 Teoría</button>
+        <button class="pestana" role="tab" data-tab="graficos">📈 Gráficos</button>
+        <button class="pestana" role="tab" data-tab="ejemplos">💻 Ejemplos</button>
+        <button class="pestana" role="tab" data-tab="practica">✏️ Práctica</button>
+      </div>
+
+      <div class="hoja panel" role="tabpanel" data-panel="teoria">
+        <h3>Ecuación explícita</h3>
+        <div class="formula">\[y = mx + b\]</div>
+        <ul>
+          <li><strong>Pendiente (\(m\)):</strong> cuánto cambia \(y\) cuando \(x\) aumenta 1. Es la inclinación de la recta: \(m = \tan\theta\).</li>
+          <li><strong>Ordenada al origen (\(b\)):</strong> dónde la recta corta al eje \(y\), en el punto \((0, b)\).</li>
+        </ul>
+
+        <h3>Otras formas de la ecuación</h3>
+        <h4>Punto-pendiente</h4>
+        <div class="formula">\[y - y_1 = m(x - x_1)\]</div>
+        <h4>Por dos puntos</h4>
+        <p>Con \(A = (x_1, y_1)\) y \(B = (x_2, y_2)\), \(x_1 \neq x_2\):</p>
+        <div class="formula">\[m = \frac{y_2 - y_1}{x_2 - x_1}\]</div>
+        <h4>General o implícita</h4>
+        <div class="formula">\[Ax + By + C = 0\]</div>
+        <h4>Segmentaria</h4>
+        <p>Usa los cortes con los ejes: \((a, 0)\) es la abscisa al origen y \((0, b)\) la ordenada al origen.</p>
+        <div class="formula">\[\frac{x}{a} + \frac{y}{b} = 1\]</div>
+
+        <h3>Cómo pasar de una forma a otra</h3>
+        <ul>
+          <li>Punto-pendiente → explícita: \(y = mx - mx_1 + y_1\), entonces \(b = y_1 - mx_1\).</li>
+          <li>Explícita → general: \(mx - y + b = 0\).</li>
+          <li>General → explícita (\(B \neq 0\)): \(y = -\dfrac{A}{B}x - \dfrac{C}{B}\).</li>
+          <li>Segmentaria → general: \(bx + ay - ab = 0\).</li>
+          <li>General → segmentaria (\(C \neq 0\)): se pasa \(C\) al otro lado y se divide por \(-C\): \(a = -\dfrac{C}{A}\), \(b = -\dfrac{C}{B}\).</li>
+        </ul>
+
+        <h3>Vectorial, paramétrica y continua</h3>
+        <p>Con un punto \(A = (x_1, y_1)\) y un vector director \(\vec{v} = (v_1, v_2)\):</p>
+        <h4>Vectorial</h4>
+        <div class="formula">\[(x, y) = (x_1, y_1) + k \cdot (v_1, v_2) \quad (k \in \mathbb{R})\]</div>
+        <h4>Paramétricas</h4>
+        <div class="formula">\[\begin{cases} x = x_1 + k \cdot v_1 \\ y = y_1 + k \cdot v_2 \end{cases}\]</div>
+        <h4>Continua</h4>
+        <p>Se despeja \(k\) de las dos paramétricas y se igualan (con \(v_1, v_2 \neq 0\)):</p>
+        <div class="formula">\[\frac{x - x_1}{v_1} = \frac{y - y_1}{v_2}\]</div>
+
+        <h3>Posiciones relativas</h3>
+        <ul>
+          <li><strong>Paralelas:</strong> misma pendiente, \(m_1 = m_2\).</li>
+          <li><strong>Perpendiculares:</strong> pendientes opuestas e inversas, \(m_1 \cdot m_2 = -1\), es decir \(m_2 = -\dfrac{1}{m_1}\).</li>
+          <li><strong>Intersección:</strong> se igualan las dos ecuaciones, \(m_1x + b_1 = m_2x + b_2\), de donde \(x = \dfrac{b_2 - b_1}{m_1 - m_2}\).</li>
+        </ul>
+
+      </div>
+
+      <div class="hoja panel" role="tabpanel" data-panel="graficos" hidden>
+        <h3>Gráficos interactivos</h3>
+        <p>Cambiá la pendiente y la ordenada al origen y mirá cómo se mueve la recta.</p>
+        <figure class="grafico" data-grafico="recta"></figure>
+      </div>
+
+      <div class="hoja panel" role="tabpanel" data-panel="ejemplos" hidden>
+        <h3>Recta que pasa por dos puntos</h3>
+        <p>Con \(A = (1, 2)\) y \(B = (3, 8)\):</p>
+        <ol>
+          <li>Pendiente: \(m = \dfrac{8 - 2}{3 - 1} = 3\).</li>
+          <li>Punto-pendiente: \(y - 2 = 3(x - 1)\).</li>
+          <li>Explícita: \(y = 3x - 1\).</li>
+          <li>General: \(3x - y - 1 = 0\).</li>
+          <li>Segmentaria: \(a = -\dfrac{-1}{3} = \dfrac{1}{3}\), \(b = -\dfrac{-1}{-1} = -1\), así que \(\dfrac{x}{1/3} + \dfrac{y}{-1} = 1\).</li>
+        </ol>
+
+        <h3>La misma recta en forma vectorial</h3>
+        <p>Un vector director es \(\vec{AB} = (3 - 1, 8 - 2) = (2, 6)\).</p>
+        <ul>
+          <li>Vectorial: \((x, y) = (1, 2) + k \cdot (2, 6)\)</li>
+          <li>Paramétricas: \(x = 1 + 2k\), \(y = 2 + 6k\)</li>
+          <li>Continua: \(\dfrac{x - 1}{2} = \dfrac{y - 2}{6}\)</li>
+        </ul>
+
+        <h3>Paralela y perpendicular</h3>
+        <p>Rectas que pasan por \((0, 4)\) y se relacionan con \(y = 3x - 1\):</p>
+        <ul>
+          <li>Paralela: misma pendiente, \(y = 3x + 4\).</li>
+          <li>Perpendicular: \(m = -\dfrac{1}{3}\), \(y = -\dfrac{1}{3}x + 4\).</li>
+        </ul>
+
+        <h3>Intersección de dos rectas</h3>
+        <p>\(y = 3x - 1\) e \(y = -x + 7\):</p>
+        <div class="formula">\[3x - 1 = -x + 7 \Rightarrow 4x = 8 \Rightarrow x = 2,\quad y = 3 \cdot 2 - 1 = 5\]</div>
+        <p>Se cortan en \(P = (2, 5)\).</p>
+      </div>
+
+      <div class="hoja panel" role="tabpanel" data-panel="practica" hidden>
+        <h3>Ejercicios</h3>
+        <div class="ejercicio">
+          <p><strong>1.</strong> Hallá la ecuación explícita de la recta que pasa por \((-1, 4)\) y \((2, -2)\).</p>
+          <details><summary>Ver solución</summary>
+            <div class="solucion"><p>\(m = \dfrac{-2 - 4}{2 - (-1)} = -2\).</p><p>\(y - 4 = -2(x + 1) \Rightarrow y = -2x + 2\)</p></div>
+          </details>
+        </div>
+        <div class="ejercicio">
+          <p><strong>2.</strong> Pasá \(2x + 4y - 8 = 0\) a forma explícita.</p>
+          <details><summary>Ver solución</summary>
+            <div class="solucion"><p>\(4y = -2x + 8 \Rightarrow y = -\dfrac{1}{2}x + 2\)</p></div>
+          </details>
+        </div>
+        <div class="ejercicio">
+          <p><strong>3.</strong> Escribí \(2x + 4y - 8 = 0\) en forma segmentaria.</p>
+          <details><summary>Ver solución</summary>
+            <div class="solucion"><p>\(a = -\dfrac{-8}{2} = 4\), \(b = -\dfrac{-8}{4} = 2\).</p><p>\(\dfrac{x}{4} + \dfrac{y}{2} = 1\)</p></div>
+          </details>
+        </div>
+        <div class="ejercicio">
+          <p><strong>4.</strong> ¿Qué pendiente tiene una recta perpendicular a \(y = 2x + 1\)?</p>
+          <details><summary>Ver solución</summary>
+            <div class="solucion"><p>\(m_2 = -\dfrac{1}{2}\), porque \(2 \cdot \left(-\dfrac{1}{2}\right) = -1\).</p></div>
+          </details>
+        </div>
+        <div class="ejercicio">
+          <p><strong>5.</strong> Escribí las ecuaciones paramétricas de la recta que pasa por \((2, -1)\) con vector director \((3, 4)\).</p>
+          <details><summary>Ver solución</summary>
+            <div class="solucion"><p>\(x = 2 + 3k\), \(y = -1 + 4k\), con \(k \in \mathbb{R}\).</p></div>
+          </details>
+        </div>
+      </div>
+    </article>
+
+    <!-- ================= MÓDULO 6 ================= -->
+    <article id="conicas" class="modulo" hidden>
+      <a class="volver" href="#inicio">← Volver</a>
+      <h2 tabindex="-1">Cónicas</h2>
+
+      <div class="pestanas" role="tablist">
+        <button class="pestana" role="tab" data-tab="teoria">📖 Teoría</button>
+        <button class="pestana" role="tab" data-tab="graficos">📈 Gráficos</button>
+        <button class="pestana" role="tab" data-tab="ejemplos">💻 Ejemplos</button>
+        <button class="pestana" role="tab" data-tab="practica">✏️ Práctica</button>
+      </div>
+
+      <div class="hoja panel" role="tabpanel" data-panel="teoria">
+        <h3>La circunferencia</h3>
+        <p>Es el conjunto de puntos \(P = (x, y)\) que están a una distancia fija \(r\) (radio) de un punto fijo \(C = (h, k)\) (centro).</p>
+        <div class="formula">\[d(P, C) = r \iff \sqrt{(x - h)^2 + (y - k)^2} = r\]</div>
+        <h4>Ecuación canónica</h4>
+        <div class="formula">\[(x - h)^2 + (y - k)^2 = r^2\]</div>
+        <h4>De canónica a general</h4>
+        <p>Se desarrollan los cuadrados de binomio con \((a \pm b)^2 = a^2 \pm 2ab + b^2\):</p>
+        <div class="formula">\[x^2 + y^2 + (-2h)x + (-2k)y + (h^2 + k^2 - r^2) = 0\]</div>
+        <p>Llamando \(D = -2h\), \(E = -2k\) y \(F = h^2 + k^2 - r^2\):</p>
+        <div class="formula">\[x^2 + y^2 + Dx + Ey + F = 0\]</div>
+        <h4>¿Un punto está en la circunferencia?</h4>
+        <p>Se calcula \((x_0 - h)^2 + (y_0 - k)^2\) y se compara con \(r^2\):</p>
+        <ul>
+          <li>Igual a \(r^2\): el punto <strong>pertenece</strong> a la circunferencia.</li>
+          <li>Menor que \(r^2\): el punto es <strong>interior</strong>.</li>
+          <li>Mayor que \(r^2\): el punto es <strong>exterior</strong>.</li>
+        </ul>
+
+        <h3>La parábola</h3>
+        <p>Es el conjunto de puntos que están a la misma distancia de un punto fijo, el <strong>foco</strong> \(F\), y de una recta fija, la <strong>directriz</strong> \(d\).</p>
+        <div class="formula">\[d(P, F) = d(P, d)\]</div>
+        <h4>Elementos</h4>
+        <ul>
+          <li><strong>Vértice \(V = (h, k)\):</strong> punto medio entre el foco y la directriz.</li>
+          <li><strong>Parámetro \(p\):</strong> distancia con signo entre el vértice y el foco.</li>
+          <li><strong>Eje de simetría:</strong> recta que pasa por el vértice y el foco.</li>
+        </ul>
+        <h4>Parábolas de eje vertical</h4>
+        <div class="tabla">
+          <table>
+            <thead><tr><th></th><th>Vértice en el origen</th><th>Vértice en \((h, k)\)</th></tr></thead>
+            <tbody>
+              <tr><td>Ecuación</td><td>\(x^2 = 4py\)</td><td>\((x - h)^2 = 4p(y - k)\)</td></tr>
+              <tr><td>Foco</td><td>\((0, p)\)</td><td>\((h, k + p)\)</td></tr>
+              <tr><td>Directriz</td><td>\(y = -p\)</td><td>\(y = k - p\)</td></tr>
+              <tr><td>Eje</td><td>\(x = 0\)</td><td>\(x = h\)</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <ul>
+          <li>Si \(p \gt 0\), la parábola abre hacia arriba.</li>
+          <li>Si \(p \lt 0\), la parábola abre hacia abajo.</li>
+        </ul>
+
+      </div>
+
+      <div class="hoja panel" role="tabpanel" data-panel="graficos" hidden>
+        <h3>Gráficos interactivos</h3>
+        <p>La circunferencia con su centro y su radio, y la parábola con su vértice, foco, directriz y cortes con los ejes.</p>
+        <figure class="grafico" data-grafico="circunferencia"></figure>
+        <figure class="grafico" data-grafico="parabola"></figure>
+      </div>
+
+      <div class="hoja panel" role="tabpanel" data-panel="ejemplos" hidden>
+        <h3>Circunferencia de centro (2, 1) y radio 5</h3>
+        <ul>
+          <li>Canónica: \((x - 2)^2 + (y - 1)^2 = 25\)</li>
+          <li>\(D = -4\), \(E = -2\), \(F = 4 + 1 - 25 = -20\)</li>
+          <li>General: \(x^2 + y^2 - 4x - 2y - 20 = 0\)</li>
+        </ul>
+        <h4>Posición de algunos puntos</h4>
+        <ul>
+          <li>\((6, 4)\): \((6 - 2)^2 + (4 - 1)^2 = 16 + 9 = 25\). Pertenece.</li>
+          <li>\((0, 0)\): \((0 - 2)^2 + (0 - 1)^2 = 5 \lt 25\). Es interior.</li>
+          <li>\((8, 1)\): \((8 - 2)^2 + 0 = 36 \gt 25\). Es exterior.</li>
+        </ul>
+
+        <h3>Parábola \((x - 1)^2 = 8(y + 2)\)</h3>
+        <ul>
+          <li>Vértice: \(V = (1, -2)\).</li>
+          <li>\(4p = 8\), entonces \(p = 2 \gt 0\): abre hacia arriba.</li>
+          <li>Foco: \(F = (1, -2 + 2) = (1, 0)\).</li>
+          <li>Directriz: \(y = -2 - 2 = -4\).</li>
+          <li>Eje de simetría: \(x = 1\).</li>
+        </ul>
+      </div>
+
+      <div class="hoja panel" role="tabpanel" data-panel="practica" hidden>
+        <h3>Ejercicios</h3>
+        <div class="ejercicio">
+          <p><strong>1.</strong> Indicá centro y radio de \((x + 3)^2 + (y - 4)^2 = 9\).</p>
+          <details><summary>Ver solución</summary>
+            <div class="solucion"><p>Centro \((-3, 4)\), radio \(r = 3\).</p></div>
+          </details>
+        </div>
+        <div class="ejercicio">
+          <p><strong>2.</strong> Escribí la ecuación general de la circunferencia de centro \((0, 2)\) y radio 3.</p>
+          <details><summary>Ver solución</summary>
+            <div class="solucion"><p>Canónica: \(x^2 + (y - 2)^2 = 9\).</p><p>\(D = 0\), \(E = -4\), \(F = 0 + 4 - 9 = -5\): \(x^2 + y^2 - 4y - 5 = 0\).</p></div>
+          </details>
+        </div>
+        <div class="ejercicio">
+          <p><strong>3.</strong> ¿El punto \((1, 1)\) es interior, exterior o pertenece a \(x^2 + y^2 = 4\)?</p>
+          <details><summary>Ver solución</summary>
+            <div class="solucion"><p>\(1^2 + 1^2 = 2 \lt 4\): es interior.</p></div>
+          </details>
+        </div>
+        <div class="ejercicio">
+          <p><strong>4.</strong> Hallá vértice, foco y directriz de \(x^2 = -12y\). ¿Hacia dónde abre?</p>
+          <details><summary>Ver solución</summary>
+            <div class="solucion"><p>\(4p = -12 \Rightarrow p = -3\). Vértice \((0, 0)\), foco \((0, -3)\), directriz \(y = 3\).</p><p>Como \(p \lt 0\), abre hacia abajo.</p></div>
+          </details>
+        </div>
+        <div class="ejercicio">
+          <p><strong>5.</strong> Hallá vértice, foco y directriz de \((x - 2)^2 = 4(y - 1)\).</p>
+          <details><summary>Ver solución</summary>
+            <div class="solucion"><p>\(V = (2, 1)\), \(4p = 4 \Rightarrow p = 1\).</p><p>Foco \((2, 2)\), directriz \(y = 0\).</p></div>
+          </details>
+        </div>
+      </div>
+    </article>
+
+    <!-- ================= MÓDULO 7 ================= -->
+    <article id="intersecciones" class="modulo" hidden>
+      <a class="volver" href="#inicio">← Volver</a>
+      <h2 tabindex="-1">Intersecciones</h2>
+
+      <div class="pestanas" role="tablist">
+        <button class="pestana" role="tab" data-tab="teoria">📖 Teoría</button>
+        <button class="pestana" role="tab" data-tab="graficos">📈 Gráficos</button>
+        <button class="pestana" role="tab" data-tab="ejemplos">💻 Ejemplos</button>
+        <button class="pestana" role="tab" data-tab="practica">✏️ Práctica</button>
+      </div>
+
+      <div class="hoja panel" role="tabpanel" data-panel="teoria">
+        <h3>Cómo se encuentran los puntos de corte</h3>
+        <p>Se arma un sistema con las dos ecuaciones y se resuelve por sustitución o igualación.</p>
+        <h4>Recta y circunferencia</h4>
+        <ol>
+          <li>Se reemplaza \(y\) de la recta en la ecuación de la circunferencia.</li>
+          <li>Se desarrollan los cuadrados y se agrupan términos hasta llegar a \(ax^2 + bx + c = 0\).</li>
+        </ol>
+        <h4>Recta y parábola</h4>
+        <ol>
+          <li>Se igualan las dos expresiones de \(y\).</li>
+          <li>Se pasa todo a un miembro hasta llegar a \(ax^2 + bx + c = 0\).</li>
+        </ol>
+
+        <h3>Resolvente y discriminante</h3>
+        <div class="formula">\[x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a} \qquad \Delta = b^2 - 4ac\]</div>
+        <div class="tabla">
+          <table>
+            <thead><tr><th>Discriminante</th><th>Soluciones</th><th>La recta es…</th></tr></thead>
+            <tbody>
+              <tr><td>\(\Delta \gt 0\)</td><td>2 puntos de corte</td><td>Secante</td></tr>
+              <tr><td>\(\Delta = 0\)</td><td>1 punto de corte</td><td>Tangente</td></tr>
+              <tr><td>\(\Delta \lt 0\)</td><td>Ningún punto de corte</td><td>Exterior</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Con cada \(x\) encontrado se calcula su \(y\) reemplazando en la ecuación de la recta.</p>
+
+        <h3>Qué tienen en común la circunferencia y la parábola</h3>
+        <p>Las dos son cónicas, tienen ecuaciones de segundo grado y se definen por una condición de distancia:</p>
+        <ul>
+          <li>La <strong>circunferencia</strong> mantiene una distancia constante \(r\) a un punto: el centro.</li>
+          <li>La <strong>parábola</strong> mantiene la misma distancia a un punto (el foco) y a una recta (la directriz).</li>
+        </ul>
+      </div>
+
+      <div class="hoja panel" role="tabpanel" data-panel="graficos" hidden>
+        <h3>Gráficos interactivos</h3>
+        <p>Mové la recta y mirá cómo cambia la cantidad de puntos de corte según el discriminante.</p>
+        <figure class="grafico" data-grafico="interseccion"></figure>
+      </div>
+
+      <div class="hoja panel" role="tabpanel" data-panel="ejemplos" hidden>
+        <h3>Recta y circunferencia</h3>
+        <p>\((x - 2)^2 + (y - 1)^2 = 25\) e \(y = x - 2\).</p>
+        <ol>
+          <li>Sustitución: \((x - 2)^2 + (x - 3)^2 = 25\)</li>
+          <li>Desarrollo: \((x^2 - 4x + 4) + (x^2 - 6x + 9) = 25\)</li>
+          <li>Agrupación: \(2x^2 - 10x - 12 = 0\), y dividiendo por 2: \(x^2 - 5x - 6 = 0\)</li>
+          <li>Resolvente: \(x = \dfrac{5 \pm \sqrt{25 + 24}}{2} = \dfrac{5 \pm 7}{2}\), entonces \(x_1 = 6\), \(x_2 = -1\)</li>
+          <li>Ordenadas en \(y = x - 2\): \(y_1 = 4\), \(y_2 = -3\)</li>
+        </ol>
+        <p>La recta es secante y corta en \(P_1 = (6, 4)\) y \(P_2 = (-1, -3)\).</p>
+
+        <h3>Recta y parábola</h3>
+        <p>\(y = x^2 - 4x + 1\) e \(y = -x + 5\).</p>
+        <ol>
+          <li>Igualación: \(x^2 - 4x + 1 = -x + 5\)</li>
+          <li>Igualar a cero: \(x^2 - 3x - 4 = 0\)</li>
+          <li>Resolvente: \(x = \dfrac{3 \pm \sqrt{9 + 16}}{2} = \dfrac{3 \pm 5}{2}\), entonces \(x_1 = 4\), \(x_2 = -1\)</li>
+          <li>Ordenadas en \(y = -x + 5\): \(y_1 = 1\), \(y_2 = 6\)</li>
+        </ol>
+        <p>La recta es secante y corta en \(P_1 = (4, 1)\) y \(P_2 = (-1, 6)\).</p>
+      </div>
+
+      <div class="hoja panel" role="tabpanel" data-panel="practica" hidden>
+        <h3>Ejercicios</h3>
+        <div class="ejercicio">
+          <p><strong>1.</strong> Hallá los puntos de corte entre \(y = x^2\) e \(y = x + 2\).</p>
+          <details><summary>Ver solución</summary>
+            <div class="solucion"><p>\(x^2 - x - 2 = 0 \Rightarrow x = \dfrac{1 \pm 3}{2}\), entonces \(x = 2\) o \(x = -1\).</p><p>Puntos: \((2, 4)\) y \((-1, 1)\).</p></div>
+          </details>
+        </div>
+        <div class="ejercicio">
+          <p><strong>2.</strong> Hallá los puntos de corte entre \(x^2 + y^2 = 25\) e \(y = x + 1\).</p>
+          <details><summary>Ver solución</summary>
+            <div class="solucion"><p>\(x^2 + (x + 1)^2 = 25 \Rightarrow 2x^2 + 2x - 24 = 0 \Rightarrow x^2 + x - 12 = 0\).</p><p>\(x = 3\) o \(x = -4\). Puntos: \((3, 4)\) y \((-4, -3)\).</p></div>
+          </details>
+        </div>
+        <div class="ejercicio">
+          <p><strong>3.</strong> ¿La recta \(y = 2x - 1\) es secante, tangente o exterior a \(y = x^2\)?</p>
+          <details><summary>Ver solución</summary>
+            <div class="solucion"><p>\(x^2 - 2x + 1 = 0\), \(\Delta = 4 - 4 = 0\): es tangente, en el punto \((1, 1)\).</p></div>
+          </details>
+        </div>
+        <div class="ejercicio">
+          <p><strong>4.</strong> ¿Se cortan \(y = x^2 + 3\) e \(y = x\)?</p>
+          <details><summary>Ver solución</summary>
+            <div class="solucion"><p>\(x^2 - x + 3 = 0\), \(\Delta = 1 - 12 = -11 \lt 0\): no se cortan, la recta es exterior.</p></div>
+          </details>
+        </div>
+      </div>
+    </article>
+
+  </main>
+
+  <footer class="contenedor">
+    Trabajo práctico de programación. Contenido tomado del Informe Sintético y del Manual Teórico de Matemática de 5° año.
+  </footer>
+
+  <script>
+    // Todas las vistas de módulo de la página
+    const inicio = document.getElementById('inicio');
+    const modulos = document.querySelectorAll('.modulo');
+
+    // Conecta cada pestaña con su panel (accesibilidad para lectores de pantalla)
+    modulos.forEach(function (modulo) {
+      modulo.querySelectorAll('.pestana').forEach(function (boton) {
+        const panel = modulo.querySelector('[data-panel="' + boton.dataset.tab + '"]');
+        panel.id = modulo.id + '-' + boton.dataset.tab;
+        boton.id = panel.id + '-tab';
+        boton.setAttribute('aria-controls', panel.id);
+        panel.setAttribute('aria-labelledby', boton.id);
+      });
+    });
+
+    // Muestra la pestaña elegida dentro de un módulo y oculta las otras
+    function activarPestana(modulo, nombre) {
+      modulo.querySelectorAll('.pestana').forEach(function (boton) {
+        boton.setAttribute('aria-selected', boton.dataset.tab === nombre);
+      });
+      modulo.querySelectorAll('.panel').forEach(function (panel) {
+        panel.hidden = panel.dataset.panel !== nombre;
+      });
+      // Los gráficos de la pestaña recién mostrada se dibujan con su tamaño real
+      requestAnimationFrame(function () {
+        redibujos.forEach(function (redibujar) { redibujar(); });
+      });
+    }
+
+    // Lee el "#" de la dirección y decide qué mostrar: el inicio o un módulo
+    function mostrarVista() {
+      const id = location.hash.slice(1);
+      const elegido = document.getElementById(id);
+      const esModulo = elegido !== null && elegido.classList.contains('modulo');
+
+      inicio.hidden = esModulo;
+      modulos.forEach(function (modulo) {
+        modulo.hidden = modulo !== elegido;
+      });
+
+      if (esModulo) {
+        activarPestana(elegido, 'teoria');
+        window.scrollTo(0, 0);
+        elegido.querySelector('h2').focus();
+      }
+    }
+
+    // Un solo "escuchador" para todos los botones de pestañas
+    document.addEventListener('click', function (evento) {
+      const boton = evento.target.closest('.pestana');
+      if (boton) {
+        activarPestana(boton.closest('.modulo'), boton.dataset.tab);
+      }
+    });
+
+    // Cambia de vista cuando cambia el "#" (incluye el botón Atrás del navegador)
+    window.addEventListener('hashchange', mostrarVista);
+
+    // =====================================================================
+    // GRÁFICOS INTERACTIVOS
+    // Cada <figure class="grafico" data-grafico="..."> se completa con un
+    // <canvas>, controles (deslizadores) y una explicación que se actualiza.
+    // =====================================================================
+
+    const COLOR = {
+      texto: '#1C2B4A',
+      gris: '#5B6782',
+      grilla: '#E6ECF5',
+      azul: '#2952CC',
+      rojo: '#D2453D',
+      verde: '#1F8A5B'
+    };
+
+    // Número con coma decimal y signo menos tipográfico: 2.5 -> "2,5"
+    function num(v) {
+      const r = Math.round(v * 100) / 100;
+      return (r === 0 ? 0 : r).toString().replace('.', ',').replace('-', '−');
+    }
+
+    // El mismo número, pero escrito para KaTeX
+    function numTex(v) {
+      return num(v).replace('−', '-').replace(',', '{,}');
+    }
+
+    // Arma un polinomio sin "+ -", sin coeficientes 1 y sin términos 0.
+    // terminos = [[coeficiente, 'x^2'], [coeficiente, 'x'], [coeficiente, '']]
+    function polinomio(terminos, paraTex = true) {
+      const n = paraTex ? numTex : num;
+      const menos = paraTex ? '-' : '−';
+      let s = '';
+      terminos.forEach(function ([c, variable]) {
+        if (Math.abs(c) < 1e-9) return;
+        const abs = Math.abs(c);
+        const coef = abs === 1 && variable !== '' ? '' : n(abs);
+        if (s === '') s = (c < 0 ? menos : '') + coef + variable;
+        else s += (c < 0 ? ' ' + menos + ' ' : ' + ') + coef + variable;
+      });
+      return s || '0';
+    }
+
+    // (x - valor) escrito bien: "x", "(x - 2)" o "(x + 2)"
+    function binomio(variable, valor) {
+      if (valor === 0) return variable;
+      return valor > 0
+        ? '(' + variable + ' - ' + numTex(valor) + ')'
+        : '(' + variable + ' + ' + numTex(-valor) + ')';
+    }
+
+    // Etiqueta de los múltiplos de π/2 para el eje x de trigonometría
+    function etiquetaPi(k) {
+      if (k % 2 === 0) {
+        const m = k / 2;
+        return m === 1 ? 'π' : m === -1 ? '−π' : num(m) + 'π';
+      }
+      return (k === 1 ? '' : k === -1 ? '−' : num(k)) + 'π/2';
+    }
+
+    // ---------------------------------------------------------------------
+    // Plano cartesiano dibujado sobre un <canvas>.
+    // Convierte coordenadas matemáticas (x, y) en píxeles y dibuja
+    // ejes, curvas, segmentos, puntos y textos.
+    // ---------------------------------------------------------------------
+    class Plano {
+      constructor(canvas, vista) {
+        this.canvas = canvas;
+        this.ctx = canvas.getContext('2d');
+        this.v = Object.assign({ pasoX: 1, pasoY: 1, pi: false }, vista);
+      }
+
+      // Calcula el tamaño. Sin "relacion", usa la MISMA escala en x e y
+      // (así una circunferencia se ve redonda y un ángulo recto se ve recto).
+      ajustar() {
+        const { xMin, xMax, yMin, yMax, relacion } = this.v;
+        this.ancho = this.canvas.clientWidth;
+        this.alto = relacion
+          ? this.ancho * relacion
+          : this.ancho * (yMax - yMin) / (xMax - xMin);
+        this.ux = this.ancho / (xMax - xMin); // píxeles por unidad en x
+        this.uy = this.alto / (yMax - yMin);  // píxeles por unidad en y
+        const dpr = window.devicePixelRatio || 1; // nitidez en pantallas HD
+        this.canvas.style.height = this.alto + 'px';
+        this.canvas.width = Math.round(this.ancho * dpr);
+        this.canvas.height = Math.round(this.alto * dpr);
+        this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+
+      // De matemática a píxeles y al revés
+      px(x) { return (x - this.v.xMin) * this.ux; }
+      py(y) { return (this.v.yMax - y) * this.uy; }
+      aX(px) { return this.v.xMin + px / this.ux; }
+      aY(py) { return this.v.yMax - py / this.uy; }
+
+      estilo(color, ancho, discontinuo) {
+        this.ctx.strokeStyle = color;
+        this.ctx.lineWidth = ancho;
+        this.ctx.lineCap = 'round';
+        this.ctx.setLineDash(discontinuo ? [6, 5] : []);
+      }
+
+      // Fondo blanco, cuadrícula, ejes con flechas y números
+      fondo() {
+        const { ctx, v, ancho, alto } = this;
+        ctx.fillStyle = '#fff';
+        ctx.fillRect(0, 0, ancho, alto);
+
+        const pasoX = v.pi ? Math.PI / 2 : v.pasoX;
+        const pasoY = v.pasoY;
+        const kx0 = Math.ceil(v.xMin / pasoX), kx1 = Math.floor(v.xMax / pasoX);
+        const ky0 = Math.ceil(v.yMin / pasoY), ky1 = Math.floor(v.yMax / pasoY);
+
+        // Cuadrícula
+        this.estilo(COLOR.grilla, 1, false);
+        ctx.beginPath();
+        for (let k = kx0; k <= kx1; k++) {
+          ctx.moveTo(this.px(k * pasoX), 0);
+          ctx.lineTo(this.px(k * pasoX), alto);
+        }
+        for (let k = ky0; k <= ky1; k++) {
+          ctx.moveTo(0, this.py(k * pasoY));
+          ctx.lineTo(ancho, this.py(k * pasoY));
+        }
+        ctx.stroke();
+
+        // Ejes (si el 0 no se ve, quedan pegados al borde)
+        const ejeY = Math.min(Math.max(this.px(0), 0), ancho);
+        const ejeX = Math.min(Math.max(this.py(0), 0), alto);
+        this.estilo(COLOR.texto, 1.5, false);
+        ctx.beginPath();
+        ctx.moveTo(0, ejeX); ctx.lineTo(ancho, ejeX);
+        ctx.moveTo(ejeY, alto); ctx.lineTo(ejeY, 0);
+        // Flechas
+        ctx.moveTo(ancho - 9, ejeX - 5); ctx.lineTo(ancho, ejeX); ctx.lineTo(ancho - 9, ejeX + 5);
+        ctx.moveTo(ejeY - 5, 9); ctx.lineTo(ejeY, 0); ctx.lineTo(ejeY + 5, 9);
+        ctx.stroke();
+
+        ctx.fillStyle = COLOR.texto;
+        ctx.font = '700 13px "Atkinson Hyperlegible", sans-serif';
+        ctx.textAlign = 'right';
+        ctx.textBaseline = 'bottom';
+        ctx.fillText('x', ancho - 4, ejeX - 6);
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'top';
+        ctx.fillText('y', ejeY + 8, 2);
+
+        // Números de los ejes (si quedan muy juntos, se muestra uno sí y uno no)
+        ctx.fillStyle = COLOR.gris;
+        ctx.font = '12px "Atkinson Hyperlegible", sans-serif';
+        const saltoX = this.ux * pasoX < 30 ? 2 : 1;
+        const saltoY = this.uy * pasoY < 22 ? 2 : 1;
+        const abajo = ejeX < alto - 20;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = abajo ? 'top' : 'bottom';
+        for (let k = kx0; k <= kx1; k++) {
+          const x = this.px(k * pasoX);
+          if (k === 0 || k % saltoX !== 0 || x < 10 || x > ancho - 16) continue;
+          ctx.fillText(v.pi ? etiquetaPi(k) : num(k * pasoX), x, abajo ? ejeX + 5 : ejeX - 5);
+        }
+        const izquierda = ejeY > 30;
+        ctx.textAlign = izquierda ? 'right' : 'left';
+        ctx.textBaseline = 'middle';
+        for (let k = ky0; k <= ky1; k++) {
+          const y = this.py(k * pasoY);
+          if (k === 0 || k % saltoY !== 0 || y < 14 || y > alto - 8) continue;
+          ctx.fillText(num(k * pasoY), izquierda ? ejeY - 6 : ejeY + 6, y);
+        }
+        if (this.px(0) > 0 && this.py(0) < alto) {
+          ctx.textAlign = 'right';
+          ctx.textBaseline = 'top';
+          ctx.fillText('0', ejeY - 5, ejeX + 5);
+        }
+      }
+
+      // Dibuja y = f(x) calculando un punto por píxel.
+      // Si f devuelve NaN (fuera del dominio) o pega un salto enorme
+      // (asíntota), se levanta el lápiz para no unir puntos que no van.
+      funcion(f, { color = COLOR.azul, ancho = 2.5, desde = -Infinity, hasta = Infinity, discontinuo = false } = {}) {
+        const { ctx, v } = this;
+        const x0 = Math.max(desde, v.xMin);
+        const x1 = Math.min(hasta, v.xMax);
+        if (x0 >= x1) return;
+        const pasos = Math.ceil((x1 - x0) * this.ux);
+        const rango = v.yMax - v.yMin;
+        ctx.save();
+        this.estilo(color, ancho, discontinuo);
+        ctx.beginPath();
+        let trazando = false;
+        let yAnterior = 0;
+        for (let i = 0; i <= pasos; i++) {
+          const x = x0 + (x1 - x0) * i / pasos;
+          const y = f(x);
+          if (!Number.isFinite(y)) { trazando = false; continue; }
+          const yp = Math.max(-1e4, Math.min(1e4, this.py(y)));
+          if (trazando && Math.abs(y - yAnterior) < rango) ctx.lineTo(this.px(x), yp);
+          else ctx.moveTo(this.px(x), yp);
+          trazando = true;
+          yAnterior = y;
+        }
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      segmento(x1, y1, x2, y2, { color = COLOR.texto, ancho = 2, discontinuo = false } = {}) {
+        const { ctx } = this;
+        ctx.save();
+        this.estilo(color, ancho, discontinuo);
+        ctx.beginPath();
+        ctx.moveTo(this.px(x1), this.py(y1));
+        ctx.lineTo(this.px(x2), this.py(y2));
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      vertical(x, opciones) { this.segmento(x, this.v.yMin, x, this.v.yMax, opciones); }
+      horizontal(y, opciones) { this.segmento(this.v.xMin, y, this.v.xMax, y, opciones); }
+
+      circulo(h, k, r, { color = COLOR.azul, ancho = 2.5 } = {}) {
+        const { ctx } = this;
+        ctx.save();
+        this.estilo(color, ancho, false);
+        ctx.beginPath();
+        ctx.ellipse(this.px(h), this.py(k), r * this.ux, r * this.uy, 0, 0, 2 * Math.PI);
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      // Punto lleno (incluido) o vacío (no incluido), con un anillo blanco
+      punto(x, y, { color = COLOR.rojo, abierto = false, radio = 5 } = {}) {
+        const { ctx } = this;
+        const cx = this.px(x), cy = this.py(y);
+        ctx.save();
+        ctx.setLineDash([]);
+        ctx.beginPath();
+        ctx.arc(cx, cy, radio + 2, 0, 2 * Math.PI);
+        ctx.fillStyle = '#fff';
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(cx, cy, radio, 0, 2 * Math.PI);
+        if (abierto) {
+          ctx.lineWidth = 2;
+          ctx.strokeStyle = color;
+          ctx.stroke();
+        } else {
+          ctx.fillStyle = color;
+          ctx.fill();
+        }
+        ctx.restore();
+      }
+
+      // Texto con borde blanco para que se lea sobre las líneas.
+      // dx, dy: corrimiento en píxeles. Nunca se sale del lienzo.
+      texto(x, y, str, { dx = 8, dy = -12, alinear = 'left', color = COLOR.texto } = {}) {
+        const { ctx } = this;
+        ctx.save();
+        ctx.font = '700 13px "Atkinson Hyperlegible", sans-serif';
+        ctx.textAlign = alinear;
+        ctx.textBaseline = 'middle';
+        let tx = this.px(x) + dx;
+        let ty = this.py(y) + dy;
+        const w = ctx.measureText(str).width;
+        const izq = alinear === 'left' ? tx : alinear === 'right' ? tx - w : tx - w / 2;
+        if (izq < 4) tx += 4 - izq;
+        if (izq + w > this.ancho - 4) tx -= izq + w - (this.ancho - 4);
+        ty = Math.min(Math.max(ty, 10), this.alto - 10);
+        ctx.lineJoin = 'round';
+        ctx.lineWidth = 4;
+        ctx.strokeStyle = '#fff';
+        ctx.strokeText(str, tx, ty);
+        ctx.fillStyle = color;
+        ctx.fillText(str, tx, ty);
+        ctx.restore();
+      }
+    }
+
+    // ---------------------------------------------------------------------
+    // Definición de cada gráfico: vista (qué parte del plano se ve),
+    // controles (deslizadores, opciones, casillas) y la función dibujar,
+    // que recibe el plano, los valores elegidos y la posición del mouse.
+    // dibujar devuelve la fórmula (KaTeX), la leyenda y la explicación.
+    // ---------------------------------------------------------------------
+    const SUPER = { 2: '²', 3: '³', 4: '⁴', 5: '⁵' };
+
+    const GRAFICOS = {
+
+      exponencial: {
+        titulo: 'Gráfico: función exponencial y = aˣ',
+        vista: { xMin: -4, xMax: 4, yMin: -1, yMax: 8, relacion: 0.75 },
+        controles: [{ id: 'a', etiqueta: 'Base a', min: 0.25, max: 4, paso: 0.25, valor: 2 }],
+        dibujar(p, { a }, mouse) {
+          const f = x => Math.pow(a, x);
+          p.funcion(f);
+          // Potencias de exponente entero: a⁻², a⁻¹, a⁰, a¹, a²...
+          for (let n = -3; n <= 3; n++) {
+            if (f(n) <= p.v.yMax) p.punto(n, f(n), { radio: 4 });
+          }
+          p.texto(0, 1, 'a⁰ = 1', { dx: 10, dy: 14 });
+          if (f(1) <= p.v.yMax) p.texto(1, f(1), 'a¹ = ' + num(a), { dx: 10, dy: 0 });
+          if (f(-1) <= p.v.yMax) p.texto(-1, f(-1), 'a⁻¹ = 1/a = ' + num(1 / a), { dx: -10, dy: -12, alinear: 'right' });
+
+          let lectura = '';
+          if (mouse) {
+            p.punto(mouse.x, f(mouse.x), { color: COLOR.azul });
+            lectura = num(a) + ' elevado a ' + num(mouse.x) + ' = ' + num(f(mouse.x));
+          }
+          const base = Number.isInteger(a) ? numTex(a) : '\\left(' + numTex(a) + '\\right)';
+          const crece = a > 1 ? 'Como a > 1, la función es creciente.'
+            : a < 1 ? 'Como 0 < a < 1, la función es decreciente.'
+            : 'Con a = 1 la función es constante: 1ˣ = 1.';
+          return {
+            formula: 'y = ' + base + '^{x}',
+            leyenda: [
+              { color: COLOR.azul, texto: 'y = aˣ' },
+              { color: COLOR.rojo, texto: 'Exponentes enteros', punto: true }
+            ],
+            info: crece + ' Siempre pasa por (0, 1), porque a⁰ = 1 (exponente cero). Con exponente negativo, a⁻ⁿ = 1/aⁿ: por eso, de un lado, la curva se acerca al eje x sin tocarlo. Además, aᵐ · aⁿ = aᵐ⁺ⁿ: avanzar 1 en x multiplica y por a.',
+            lectura
+          };
+        }
+      },
+
+      trigBasicas: {
+        titulo: 'Gráfico: seno, coseno y tangente',
+        vista: { xMin: -2 * Math.PI - 0.4, xMax: 2 * Math.PI + 0.4, yMin: -3, yMax: 3, relacion: 0.5, pi: true },
+        controles: [
+          { id: 'sen', tipo: 'casilla', etiqueta: 'Seno', valor: true },
+          { id: 'cos', tipo: 'casilla', etiqueta: 'Coseno', valor: true },
+          { id: 'tan', tipo: 'casilla', etiqueta: 'Tangente', valor: true }
+        ],
+        dibujar(p, { sen, cos, tan }, mouse) {
+          const leyenda = [];
+          if (tan) {
+            // Asíntotas de la tangente en x = π/2 + kπ
+            for (let k = -2; k <= 1; k++) {
+              p.vertical(Math.PI / 2 + k * Math.PI, { color: COLOR.gris, ancho: 1, discontinuo: true });
+            }
+            p.funcion(Math.tan, { color: COLOR.verde });
+            leyenda.push({ color: COLOR.verde, texto: 'tan(x)' }, { color: COLOR.gris, texto: 'Asíntotas de la tangente', discontinua: true });
+          }
+          if (cos) { p.funcion(Math.cos, { color: COLOR.rojo }); leyenda.unshift({ color: COLOR.rojo, texto: 'cos(x)' }); }
+          if (sen) { p.funcion(Math.sin, { color: COLOR.azul }); leyenda.unshift({ color: COLOR.azul, texto: 'sen(x)' }); }
+
+          let lectura = '';
+          if (mouse) {
+            const x = mouse.x;
+            const partes = [];
+            p.vertical(x, { color: COLOR.texto, ancho: 1 });
+            if (sen) { p.punto(x, Math.sin(x), { color: COLOR.azul }); partes.push('sen = ' + num(Math.sin(x))); }
+            if (cos) { p.punto(x, Math.cos(x), { color: COLOR.rojo }); partes.push('cos = ' + num(Math.cos(x))); }
+            if (tan && Math.abs(Math.cos(x)) > 1e-6) { p.punto(x, Math.tan(x), { color: COLOR.verde }); partes.push('tan = ' + num(Math.tan(x))); }
+            lectura = 'x ≈ ' + num(x / Math.PI) + 'π (' + num(x * 180 / Math.PI) + '°): ' + partes.join(', ');
+          }
+          return {
+            formula: '\\operatorname{sen}(x) \\qquad \\cos(x) \\qquad \\tan(x) = \\frac{\\operatorname{sen}(x)}{\\cos(x)}',
+            leyenda,
+            info: 'El seno y el coseno oscilan entre −1 y 1 y se repiten cada 2π. El coseno es el seno corrido π/2 hacia la izquierda. La tangente se repite cada π y tiene asíntotas verticales donde cos(x) = 0. Pasá el mouse para leer los tres valores a la vez.',
+            lectura
+          };
+        }
+      },
+
+      potencias: {
+        titulo: 'Gráfico: potencia y raíz del mismo índice',
+        vista: { xMin: -4, xMax: 4, yMin: -3, yMax: 3 },
+        controles: [{ id: 'n', etiqueta: 'Índice n', min: 2, max: 5, paso: 1, valor: 2 }],
+        dibujar(p, { n }, mouse) {
+          const potencia = x => Math.pow(x, n);
+          // Índice par: la raíz solo existe para x >= 0
+          const raiz = x => n % 2 === 0
+            ? (x >= 0 ? Math.pow(x, 1 / n) : NaN)
+            : Math.sign(x) * Math.pow(Math.abs(x), 1 / n);
+          p.funcion(x => x, { color: COLOR.gris, ancho: 1.5, discontinuo: true });
+          p.funcion(potencia, { color: COLOR.azul });
+          p.funcion(raiz, { color: COLOR.rojo });
+          p.punto(1, 1, { color: COLOR.texto, radio: 4 });
+          p.texto(1, 1, '(1, 1)', { dx: 10, dy: 12 });
+
+          let lectura = '';
+          if (mouse) {
+            const x = mouse.x;
+            p.punto(x, potencia(x), { color: COLOR.azul });
+            lectura = 'x = ' + num(x) + ': x' + SUPER[n] + ' = ' + num(potencia(x));
+            if (Number.isFinite(raiz(x))) {
+              p.punto(x, raiz(x), { color: COLOR.rojo });
+              lectura += ', ' + (n === 2 ? '' : SUPER[n]) + '√x = ' + num(raiz(x));
+            } else {
+              lectura += ', la raíz de índice par de un negativo no existe en ℝ';
+            }
+          }
+          return {
+            formula: 'y = x^{' + n + '} \\qquad y = ' + (n === 2 ? '\\sqrt{x}' : '\\sqrt[' + n + ']{x}'),
+            leyenda: [
+              { color: COLOR.azul, texto: 'Potencia y = x' + SUPER[n] },
+              { color: COLOR.rojo, texto: 'Raíz y = ' + (n === 2 ? '' : SUPER[n]) + '√x' },
+              { color: COLOR.gris, texto: 'Recta y = x', discontinua: true }
+            ],
+            info: 'La potencia y la raíz del mismo índice son operaciones inversas: sus gráficas son simétricas respecto de la recta y = x. ' +
+              (n % 2 === 0
+                ? 'Con índice par, la raíz solo existe para x ≥ 0.'
+                : 'Con índice impar, la raíz también existe para números negativos.'),
+            lectura
+          };
+        }
+      },
+
+      valorAbsoluto: {
+        titulo: 'Gráfico: transformaciones de g(x) = a|x + h| + k',
+        vista: { xMin: -7, xMax: 7, yMin: -5, yMax: 6 },
+        controles: [
+          { id: 'a', etiqueta: 'a', min: -3, max: 3, paso: 0.5, valor: 1 },
+          { id: 'h', etiqueta: 'h', min: -4, max: 4, paso: 1, valor: -1 },
+          { id: 'k', etiqueta: 'k', min: -4, max: 4, paso: 1, valor: -2 }
+        ],
+        dibujar(p, { a, h, k }, mouse) {
+          const g = x => a * Math.abs(x + h) + k;
+          p.funcion(x => Math.abs(x), { color: COLOR.gris, ancho: 1.5, discontinuo: true });
+          p.funcion(g);
+          p.punto(-h, k);
+          p.texto(-h, k, 'V = (' + num(-h) + ', ' + num(k) + ')', { dx: 0, dy: a >= 0 ? 18 : -18, alinear: 'center' });
+
+          let lectura = '';
+          if (mouse) {
+            p.punto(mouse.x, g(mouse.x), { color: COLOR.azul });
+            lectura = 'g(' + num(mouse.x) + ') = ' + num(g(mouse.x));
+          }
+
+          const coefA = a === 1 ? '' : a === -1 ? '-' : numTex(a);
+          const dentro = h === 0 ? 'x' : h > 0 ? 'x + ' + numTex(h) : 'x - ' + numTex(-h);
+          const termK = k === 0 ? '' : k > 0 ? ' + ' + numTex(k) : ' - ' + numTex(-k);
+          let forma = a === 0 ? 'Con a = 0 la gráfica es una recta horizontal.'
+            : (a > 0 ? 'Abre hacia arriba' : 'Abre hacia abajo') +
+              (Math.abs(a) > 1 ? ', con ramas más cerradas que |x|.' : Math.abs(a) < 1 ? ', con ramas más abiertas que |x|.' : '.');
+          return {
+            formula: a === 0 ? 'g(x) = ' + numTex(k) : 'g(x) = ' + coefA + '|' + dentro + '|' + termK,
+            leyenda: [
+              { color: COLOR.azul, texto: 'g(x)' },
+              { color: COLOR.gris, texto: 'f(x) = |x| (referencia)', discontinua: true },
+              { color: COLOR.rojo, texto: 'Vértice', punto: true }
+            ],
+            info: 'Vértice V = (−h, k) = (' + num(-h) + ', ' + num(k) + '). ' + forma,
+            lectura
+          };
+        }
+      },
+
+      porPartes: {
+        titulo: 'Gráfico: la función por partes g(x) del ejemplo',
+        vista: { xMin: -5, xMax: 7, yMin: -5, yMax: 13, relacion: 0.75, pasoY: 2 },
+        controles: [],
+        dibujar(p, valores, mouse) {
+          const tramos = [
+            { f: x => 2 * x + 5, desde: -Infinity, hasta: -1, texto: '2x + 5' },
+            { f: x => x * x + 2, desde: -1, hasta: 3, texto: 'x² + 2' },
+            { f: x => -x + 8, desde: 3, hasta: Infinity, texto: '−x + 8' }
+          ];
+          tramos.forEach(t => p.funcion(t.f, { desde: t.desde, hasta: t.hasta }));
+          p.segmento(3, 5, 3, 11, { color: COLOR.verde, ancho: 2, discontinuo: true });
+          p.texto(3, 8, 'salto de 6', { dx: 10, dy: 0 });
+          p.punto(-1, 3, { color: COLOR.azul });
+          p.texto(-1, 3, '(−1, 3)', { dx: -10, dy: -12, alinear: 'right' });
+          p.punto(3, 11, { color: COLOR.azul });
+          p.texto(3, 11, '(3, 11)', { dx: 10, dy: 0 });
+          p.punto(3, 5, { color: COLOR.azul, abierto: true });
+          p.texto(3, 5, '(3, 5) no incluido', { dx: 10, dy: 10 });
+
+          let lectura = '';
+          if (mouse) {
+            const x = mouse.x;
+            const t = x < -1 ? tramos[0] : x <= 3 ? tramos[1] : tramos[2];
+            p.punto(x, t.f(x));
+            lectura = 'x = ' + num(x) + ' está en el tramo ' + t.texto + ', entonces g(x) = ' + num(t.f(x));
+          }
+          return {
+            formula: 'g(x) = \\begin{cases} 2x + 5 & \\text{si } x \\lt -1 \\\\ x^2 + 2 & \\text{si } -1 \\le x \\le 3 \\\\ -x + 8 & \\text{si } x \\gt 3 \\end{cases}',
+            leyenda: [
+              { color: COLOR.azul, texto: 'g(x)' },
+              { color: COLOR.verde, texto: 'Salto en x = 3', discontinua: true }
+            ],
+            info: 'En x = −1 los dos tramos llegan a 3: la función es continua. En x = 3 el tramo de la izquierda llega a 11 y el de la derecha arranca en 5: hay un salto de 6 unidades. El punto lleno pertenece a la gráfica y el vacío no.',
+            lectura
+          };
+        }
+      },
+
+      parteEntera: {
+        titulo: 'Gráfico: función parte entera y = [x] + k',
+        vista: { xMin: -4, xMax: 5, yMin: -6, yMax: 7, relacion: 0.7 },
+        controles: [{ id: 'k', etiqueta: 'k', min: -3, max: 3, paso: 1, valor: 0 }],
+        dibujar(p, { k }, mouse) {
+          // Cada escalón: [n, n + 1) a la altura n + k
+          for (let n = Math.floor(p.v.xMin); n < p.v.xMax; n++) {
+            p.segmento(n, n + k, n + 1, n + k, { color: COLOR.azul, ancho: 2.5 });
+            p.punto(n, n + k, { color: COLOR.azul });
+            p.punto(n + 1, n + k, { color: COLOR.azul, abierto: true });
+          }
+          let lectura = '';
+          if (mouse) {
+            const x = Math.round(mouse.x * 100) / 100;
+            const y = Math.floor(x) + k;
+            p.punto(x, y);
+            lectura = '[' + num(x) + ']' + (k === 0 ? '' : (k > 0 ? ' + ' : ' − ') + num(Math.abs(k))) + ' = ' + num(y);
+          }
+          return {
+            formula: 'y = [x]' + (k === 0 ? '' : (k > 0 ? ' + ' : ' - ') + Math.abs(k)),
+            leyenda: [
+              { color: COLOR.azul, texto: 'Incluido', punto: true },
+              { color: COLOR.azul, texto: 'No incluido', punto: true, abierto: true }
+            ],
+            info: 'Cada escalón incluye su extremo izquierdo (punto lleno) y no el derecho (punto vacío), porque [x] = n cuando n ≤ x < n + 1. Cambiar k sube o baja todos los escalones. Dominio: ℝ. Imagen: ℤ.',
+            lectura
+          };
+        }
+      },
+
+      trigonometria: {
+        titulo: 'Gráfico: y = A + B · sen(Cx), con coseno o tangente',
+        vista: { xMin: -2 * Math.PI - 0.4, xMax: 2 * Math.PI + 0.4, yMin: -5, yMax: 5, relacion: 0.6, pi: true },
+        controles: [
+          { id: 'fn', tipo: 'opciones', etiqueta: 'Función', valor: 'sen',
+            opciones: [{ valor: 'sen', texto: 'Seno' }, { valor: 'cos', texto: 'Coseno' }, { valor: 'tan', texto: 'Tangente' }] },
+          { id: 'A', etiqueta: 'A (desplazamiento)', min: -3, max: 3, paso: 0.5, valor: 0 },
+          { id: 'B', etiqueta: 'B (amplitud)', min: -3, max: 3, paso: 0.5, valor: 1 },
+          { id: 'C', etiqueta: 'C (frecuencia)', min: 0.5, max: 3, paso: 0.25, valor: 1 }
+        ],
+        dibujar(p, { fn, A, B, C }, mouse) {
+          const base = { sen: Math.sin, cos: Math.cos, tan: Math.tan }[fn];
+          const f = x => A + B * base(C * x);
+          const T = (fn === 'tan' ? Math.PI : 2 * Math.PI) / C;
+          const leyenda = [{ color: COLOR.azul, texto: 'Función' }, { color: COLOR.gris, texto: 'Línea media y = A', discontinua: true }];
+
+          p.horizontal(A, { color: COLOR.gris, ancho: 1.5, discontinuo: true });
+          if (fn === 'tan') {
+            // Asíntotas: Cx = π/2 + kπ  ->  x = (π/2 + kπ) / C
+            const k0 = Math.ceil((p.v.xMin * C - Math.PI / 2) / Math.PI);
+            const k1 = Math.floor((p.v.xMax * C - Math.PI / 2) / Math.PI);
+            for (let k = k0; k <= k1; k++) {
+              p.vertical((Math.PI / 2 + k * Math.PI) / C, { color: COLOR.rojo, ancho: 1.5, discontinuo: true });
+            }
+            leyenda.push({ color: COLOR.rojo, texto: 'Asíntotas', discontinua: true });
+          } else if (B !== 0) {
+            p.horizontal(A + Math.abs(B), { color: COLOR.verde, ancho: 1.5, discontinuo: true });
+            p.horizontal(A - Math.abs(B), { color: COLOR.verde, ancho: 1.5, discontinuo: true });
+            leyenda.push({ color: COLOR.verde, texto: 'Máximo y mínimo', discontinua: true });
+          }
+          p.funcion(f);
+
+          // Marca de un período, de x = 0 a x = T
+          const yT = p.v.yMin + 0.7;
+          const fin = Math.min(T, p.v.xMax);
+          p.segmento(0, yT, fin, yT, { color: COLOR.texto, ancho: 2 });
+          p.segmento(0, yT - 0.2, 0, yT + 0.2, { color: COLOR.texto, ancho: 2 });
+          p.segmento(fin, yT - 0.2, fin, yT + 0.2, { color: COLOR.texto, ancho: 2 });
+          p.texto(fin / 2, yT, 'T ≈ ' + num(T), { dx: 0, dy: -12, alinear: 'center' });
+
+          let lectura = '';
+          if (mouse && Number.isFinite(f(mouse.x))) {
+            p.punto(mouse.x, f(mouse.x), { color: COLOR.azul });
+            lectura = 'x ≈ ' + num(mouse.x / Math.PI) + 'π: y = ' + num(f(mouse.x));
+          }
+
+          const nombre = fn === 'sen' ? '\\operatorname{sen}' : '\\' + fn;
+          const arg = C === 1 ? 'x' : numTex(C) + 'x';
+          const termino = B === 0 ? '' : B === 1 ? nombre + '(' + arg + ')' : B === -1 ? '-' + nombre + '(' + arg + ')' : numTex(B) + ' \\cdot ' + nombre + '(' + arg + ')';
+          let formula;
+          if (A === 0) formula = 'y = ' + (termino || '0');
+          else if (!termino) formula = 'y = ' + numTex(A);
+          else formula = 'y = ' + numTex(A) + (termino.startsWith('-') ? ' - ' + termino.slice(1) : ' + ' + termino);
+
+          const info = fn === 'tan'
+            ? 'Línea media: y = ' + num(A) + '. La tangente no tiene máximo ni mínimo. Período: T = π / C = π / ' + num(C) + ' ≈ ' + num(T) + '. Las asíntotas verticales se repiten cada T unidades.'
+            : 'Línea media: y = A = ' + num(A) + '. Amplitud: |B| = ' + num(Math.abs(B)) + '. Máximo: A + |B| = ' + num(A + Math.abs(B)) + '. Mínimo: A − |B| = ' + num(A - Math.abs(B)) + '. Período: T = 2π / C = 2π / ' + num(C) + ' ≈ ' + num(T) + '.';
+          return { formula, leyenda, info, lectura };
+        }
+      },
+
+      recta: {
+        titulo: 'Gráfico: la recta y = mx + b',
+        vista: { xMin: -6, xMax: 6, yMin: -5, yMax: 5 },
+        controles: [
+          { id: 'm', etiqueta: 'Pendiente m', min: -4, max: 4, paso: 0.5, valor: 2 },
+          { id: 'b', etiqueta: 'Ordenada b', min: -4, max: 4, paso: 0.5, valor: 1 },
+          { id: 'paralela', tipo: 'casilla', etiqueta: 'Mostrar una paralela', valor: false },
+          { id: 'perpendicular', tipo: 'casilla', etiqueta: 'Mostrar la perpendicular por (0, b)', valor: false }
+        ],
+        dibujar(p, { m, b, paralela, perpendicular }, mouse) {
+          const leyenda = [{ color: COLOR.azul, texto: 'y = mx + b' }, { color: COLOR.gris, texto: 'Triángulo de la pendiente' }];
+          let extra = '';
+          if (paralela) {
+            p.funcion(x => m * x + b - 3, { color: COLOR.verde, discontinuo: true });
+            leyenda.push({ color: COLOR.verde, texto: 'Paralela: misma m', discontinua: true });
+            extra += ' Paralela: y = ' + polinomio([[m, 'x'], [b - 3, '']], false) + ' (misma pendiente).';
+          }
+          if (perpendicular) {
+            if (m === 0) {
+              p.vertical(0, { color: COLOR.rojo, ancho: 2.5, discontinuo: true });
+              extra += ' Perpendicular a una recta horizontal: la recta vertical x = 0.';
+            } else {
+              p.funcion(x => -x / m + b, { color: COLOR.rojo, discontinuo: true });
+              extra += ' Perpendicular: m₂ = −1/m = ' + num(-1 / m) + ', y m · m₂ = −1.';
+            }
+            leyenda.push({ color: COLOR.rojo, texto: 'Perpendicular', discontinua: true });
+          }
+
+          // Triángulo de la pendiente: avanzo 1 en x, subo (o bajo) m en y
+          p.segmento(0, b, 1, b, { color: COLOR.gris, ancho: 2 });
+          p.segmento(1, b, 1, b + m, { color: COLOR.gris, ancho: 2 });
+          p.texto(0.5, b, '1', { dx: 0, dy: m >= 0 ? 12 : -12, alinear: 'center' });
+          if (m !== 0) p.texto(1, b + m / 2, 'm = ' + num(m), { dx: 8, dy: 0 });
+
+          p.funcion(x => m * x + b);
+          p.punto(0, b);
+          p.texto(0, b, '(0, ' + num(b) + ')', { dx: -10, dy: -12, alinear: 'right' });
+          if (m !== 0 && b !== 0) {
+            p.punto(-b / m, 0);
+            p.texto(-b / m, 0, '(' + num(-b / m) + ', 0)', { dx: 0, dy: 18, alinear: 'center' });
+          }
+
+          let lectura = '';
+          if (mouse) {
+            p.punto(mouse.x, m * mouse.x + b, { color: COLOR.azul });
+            lectura = 'Para x = ' + num(mouse.x) + ': y = ' + num(m * mouse.x + b);
+          }
+
+          const cambio = m > 0 ? 'sube ' + num(m) : m < 0 ? 'baja ' + num(-m) : 'no cambia';
+          return {
+            formula: 'y = ' + polinomio([[m, 'x'], [b, '']]),
+            leyenda,
+            info: 'Por cada unidad que avanza x, y ' + cambio + '. Ordenada al origen: (0, ' + num(b) + ').' +
+              (m !== 0 ? ' Abscisa al origen: (' + num(-b / m) + ', 0).' : '') +
+              ' Forma general: ' + polinomio([[m, 'x'], [-1, 'y'], [b, '']], false) + ' = 0.' + extra,
+            lectura
+          };
+        }
+      },
+
+      circunferencia: {
+        titulo: 'Gráfico: circunferencia de centro C = (h, k) y radio r',
+        vista: { xMin: -8, xMax: 8, yMin: -7, yMax: 7 },
+        controles: [
+          { id: 'h', etiqueta: 'h (centro en x)', min: -4, max: 4, paso: 1, valor: 2 },
+          { id: 'k', etiqueta: 'k (centro en y)', min: -3, max: 3, paso: 1, valor: 1 },
+          { id: 'r', etiqueta: 'Radio r', min: 0.5, max: 5, paso: 0.5, valor: 3 }
+        ],
+        dibujar(p, { h, k, r }, mouse) {
+          p.circulo(h, k, r);
+          p.segmento(h, k, h + r, k, { color: COLOR.verde, ancho: 2.5 });
+          p.texto(h + r / 2, k, 'r = ' + num(r), { dx: 0, dy: -12, alinear: 'center' });
+          p.punto(h, k);
+          p.texto(h, k, 'C = (' + num(h) + ', ' + num(k) + ')', { dx: -8, dy: 16, alinear: 'right' });
+
+          let lectura = '';
+          if (mouse) {
+            // P se ajusta a medias unidades para poder caer justo sobre la curva
+            const x0 = Math.round(mouse.x * 2) / 2;
+            const y0 = Math.round(mouse.y * 2) / 2;
+            const d2 = (x0 - h) ** 2 + (y0 - k) ** 2;
+            const r2 = r * r;
+            const iguales = Math.abs(d2 - r2) < 1e-9;
+            p.segmento(h, k, x0, y0, { color: COLOR.gris, ancho: 1.5, discontinuo: true });
+            p.punto(x0, y0, { color: COLOR.texto });
+            p.texto(x0, y0, 'P');
+            lectura = 'P = (' + num(x0) + ', ' + num(y0) + '): (x₀ − h)² + (y₀ − k)² = ' + num(d2) +
+              (iguales ? ' = ' : d2 < r2 ? ' < ' : ' > ') + 'r² = ' + num(r2) +
+              (iguales ? ', P pertenece a la circunferencia.' : d2 < r2 ? ', P es interior.' : ', P es exterior.');
+          }
+
+          const D = -2 * h, E = -2 * k, F = h * h + k * k - r * r;
+          return {
+            formula: '\\begin{gathered}' + binomio('x', h) + '^2 + ' + binomio('y', k) + '^2 = ' + numTex(r * r) +
+              ' \\\\ ' + polinomio([[1, 'x^2'], [1, 'y^2'], [D, 'x'], [E, 'y'], [F, '']]) + ' = 0 \\end{gathered}',
+            leyenda: [
+              { color: COLOR.azul, texto: 'Circunferencia' },
+              { color: COLOR.verde, texto: 'Radio' },
+              { color: COLOR.rojo, texto: 'Centro', punto: true }
+            ],
+            info: 'Arriba, la ecuación canónica; abajo, la general, con D = −2h = ' + num(D) + ', E = −2k = ' + num(E) +
+              ' y F = h² + k² − r² = ' + num(F) + '. Mové el puntero sobre el gráfico: el punto P te dice si pertenece, si es interior o si es exterior.',
+            lectura
+          };
+        }
+      },
+
+      parabola: {
+        titulo: 'Gráfico: parábola (x − h)² = 4p(y − k)',
+        vista: { xMin: -8, xMax: 8, yMin: -7, yMax: 7 },
+        controles: [
+          { id: 'h', etiqueta: 'h (vértice en x)', min: -4, max: 4, paso: 1, valor: 0 },
+          { id: 'k', etiqueta: 'k (vértice en y)', min: -4, max: 4, paso: 1, valor: -1 },
+          { id: 'p', etiqueta: 'Parámetro p', min: -3, max: 3, paso: 0.5, valor: 1 }
+        ],
+        dibujar(pl, { h, k, p }, mouse) {
+          if (p === 0) {
+            return {
+              formula: '(x - h)^2 = 4p(y - k)',
+              leyenda: [],
+              info: 'Con p = 0 no hay parábola: el foco coincidiría con el vértice. Elegí otro valor de p.',
+              lectura: ''
+            };
+          }
+          const f = x => (x - h) ** 2 / (4 * p) + k; // despejando y
+          pl.vertical(h, { color: COLOR.gris, ancho: 1.5, discontinuo: true });
+          pl.horizontal(k - p, { color: COLOR.verde, ancho: 2, discontinuo: true });
+          pl.texto(pl.v.xMax, k - p, 'directriz y = ' + num(k - p), { dx: -8, dy: p > 0 ? 14 : -14, alinear: 'right' });
+
+          let lectura = '';
+          if (mouse) {
+            // Definición de parábola: d(P, F) = d(P, directriz)
+            const x0 = mouse.x, y0 = f(x0);
+            const dF = Math.hypot(x0 - h, y0 - (k + p));
+            const dD = Math.abs(y0 - (k - p));
+            pl.segmento(x0, y0, h, k + p, { color: COLOR.rojo, ancho: 1.5, discontinuo: true });
+            pl.segmento(x0, y0, x0, k - p, { color: COLOR.verde, ancho: 1.5, discontinuo: true });
+            pl.punto(x0, y0, { color: COLOR.texto });
+            pl.texto(x0, y0, 'P');
+            lectura = 'P = (' + num(x0) + ', ' + num(y0) + '): d(P, F) = ' + num(dF) + ' y d(P, directriz) = ' + num(dD) + '. Son iguales.';
+          }
+
+          pl.funcion(f);
+
+          // Cortes con los ejes: raíces (y = 0) y ordenada al origen (x = 0)
+          let cortes = '';
+          const disc = -4 * p * k; // (x - h)² = -4pk
+          if (disc >= 0) {
+            const raices = disc === 0 ? [h] : [h - Math.sqrt(disc), h + Math.sqrt(disc)];
+            raices.forEach(function (x) {
+              pl.punto(x, 0, { color: COLOR.verde });
+              pl.texto(x, 0, '(' + num(x) + ', 0)', { dx: 0, dy: p > 0 ? 16 : -16, alinear: 'center' });
+            });
+            cortes += ' Corta al eje x en ' + raices.map(x => '(' + num(x) + ', 0)').join(' y ') + '.';
+          } else {
+            cortes += ' No corta al eje x.';
+          }
+          if (h !== 0) {
+            pl.punto(0, f(0), { color: COLOR.verde });
+            pl.texto(0, f(0), '(0, ' + num(f(0)) + ')', { dx: h > 0 ? -10 : 10, dy: 0, alinear: h > 0 ? 'right' : 'left' });
+            cortes += ' Corta al eje y en (0, ' + num(f(0)) + ').';
+          }
+
+          pl.punto(h, k, { color: COLOR.azul });
+          pl.texto(h, k, 'V = (' + num(h) + ', ' + num(k) + ')', { dx: 10, dy: p > 0 ? 14 : -14 });
+          pl.punto(h, k + p);
+          pl.texto(h, k + p, 'F = (' + num(h) + ', ' + num(k + p) + ')', { dx: 10, dy: p > 0 ? -12 : 12 });
+
+          return {
+            formula: binomio('x', h) + '^2 = ' + numTex(4 * p) + binomio('y', k),
+            leyenda: [
+              { color: COLOR.azul, texto: 'Parábola' },
+              { color: COLOR.azul, texto: 'Vértice', punto: true },
+              { color: COLOR.rojo, texto: 'Foco', punto: true },
+              { color: COLOR.verde, texto: 'Cortes con los ejes', punto: true },
+              { color: COLOR.verde, texto: 'Directriz', discontinua: true },
+              { color: COLOR.gris, texto: 'Eje de simetría', discontinua: true }
+            ],
+            info: 'Vértice V = (h, k) = (' + num(h) + ', ' + num(k) + '). p = ' + num(p) +
+              (p > 0 ? ' > 0: abre hacia arriba.' : ' < 0: abre hacia abajo.') +
+              ' Foco F = (h, k + p) = (' + num(h) + ', ' + num(k + p) + '). Directriz: y = k − p = ' + num(k - p) +
+              '. Eje de simetría: x = ' + num(h) + '.' + cortes +
+              ' Pasá el puntero por la curva: cada punto está a igual distancia del foco y de la directriz.',
+            lectura
+          };
+        }
+      },
+
+      interseccion: {
+        titulo: 'Gráfico: intersección de una recta con una cónica',
+        vista: { xMin: -6, xMax: 10, yMin: -7, yMax: 9 },
+        controles: [
+          { id: 'conica', tipo: 'opciones', etiqueta: 'Cónica', valor: 'circ',
+            opciones: [
+              { valor: 'circ', texto: 'Circunferencia (x − 2)² + (y − 1)² = 25' },
+              { valor: 'parab', texto: 'Parábola y = x² − 4x + 1' },
+              { valor: 'recta', texto: 'Otra recta y = −x + 7' }
+            ] },
+          { id: 'm', etiqueta: 'Pendiente m', min: -3, max: 3, paso: 0.5, valor: 1 },
+          { id: 'b', etiqueta: 'Ordenada b', min: -8, max: 8, paso: 0.5, valor: -2 }
+        ],
+        dibujar(p, { conica, m, b }, mouse) {
+          const rectaTex = 'y = ' + polinomio([[m, 'x'], [b, '']]);
+
+          // Caso de dos rectas: se igualan y queda una ecuación de primer grado
+          if (conica === 'recta') {
+            p.funcion(x => -x + 7);
+            p.funcion(x => m * x + b, { color: COLOR.verde });
+            let info;
+            if (m === -1) {
+              info = b === 7
+                ? 'Las dos rectas son la misma (coincidentes): tienen infinitos puntos en común.'
+                : 'Tienen la misma pendiente (m = −1): son paralelas y no se cortan.';
+            } else {
+              const x = (7 - b) / (m + 1);
+              const y = -x + 7;
+              p.punto(x, y);
+              p.texto(x, y, 'P = (' + num(x) + ', ' + num(y) + ')', { dx: 10, dy: -14 });
+              info = 'Igualando: ' + polinomio([[m, 'x'], [b, '']], false) + ' = −x + 7, de donde x = (7 − b) / (m + 1) = ' + num(x) +
+                ' e y = ' + num(y) + '. Se cortan en un único punto. Probá m = −1: las rectas quedan paralelas.';
+            }
+            return {
+              formula: '\\begin{cases} y = -x + 7 \\\\ ' + rectaTex + ' \\end{cases}',
+              leyenda: [
+                { color: COLOR.azul, texto: 'y = −x + 7' },
+                { color: COLOR.verde, texto: 'Recta que movés' },
+                { color: COLOR.rojo, texto: 'Punto de corte', punto: true }
+              ],
+              info,
+              lectura: ''
+            };
+          }
+
+          // Al sustituir y = mx + b en la cónica queda A·x² + B·x + C = 0
+          let A, B, C, conicaTex;
+          if (conica === 'circ') {
+            p.circulo(2, 1, 5);
+            A = 1 + m * m;
+            B = -4 + 2 * m * (b - 1);
+            C = 4 + (b - 1) ** 2 - 25;
+            conicaTex = '(x - 2)^2 + (y - 1)^2 = 25';
+          } else {
+            p.funcion(x => x * x - 4 * x + 1);
+            A = 1;
+            B = -4 - m;
+            C = 1 - b;
+            conicaTex = 'y = x^2 - 4x + 1';
+          }
+          p.funcion(x => m * x + b, { color: COLOR.verde });
+
+          const delta = B * B - 4 * A * C;
+          let xs = [];
+          if (Math.abs(delta) < 1e-9) xs = [-B / (2 * A)];
+          else if (delta > 0) xs = [(-B + Math.sqrt(delta)) / (2 * A), (-B - Math.sqrt(delta)) / (2 * A)];
+          xs.forEach(function (x, i) {
+            const y = m * x + b;
+            p.punto(x, y);
+            p.texto(x, y, (xs.length > 1 ? (i === 0 ? 'P₁' : 'P₂') : 'P') + ' = (' + num(x) + ', ' + num(y) + ')', { dx: 10, dy: -14 });
+          });
+
+          const tipo = Math.abs(delta) < 1e-9 ? ' = 0: la recta es tangente (1 punto de contacto).'
+            : delta > 0 ? ' > 0: la recta es secante (2 puntos de corte).'
+            : ' < 0: la recta es exterior (no se cortan).';
+          return {
+            formula: '\\begin{cases} ' + conicaTex + ' \\\\ ' + rectaTex + ' \\end{cases}',
+            leyenda: [
+              { color: COLOR.azul, texto: 'Cónica' },
+              { color: COLOR.verde, texto: 'Recta' },
+              { color: COLOR.rojo, texto: 'Puntos de corte', punto: true }
+            ],
+            info: 'Al sustituir queda ' + polinomio([[A, 'x²'], [B, 'x'], [C, '']], false) + ' = 0. Discriminante: Δ = B² − 4AC = ' + num(delta) + tipo +
+              (conica === 'circ' ? ' Probá m = 0 y b = 6: la recta queda tangente.' : ' Probá m = −2 y b = 0: la recta queda tangente.'),
+            lectura: ''
+          };
+        }
+      }
+    };
+
+    // ---------------------------------------------------------------------
+    // Arma un gráfico dentro de su <figure>: crea el canvas y los controles,
+    // y lo redibuja cada vez que se mueve un deslizador o el mouse.
+    // ---------------------------------------------------------------------
+    const redibujos = [];
+
+    function crearGrafico(figura) {
+      const def = GRAFICOS[figura.dataset.grafico];
+      if (!def) return;
+
+      figura.innerHTML =
+        '<figcaption>' + def.titulo + '</figcaption>' +
+        '<div class="grafico-formula"></div>' +
+        '<canvas role="img" aria-label="' + def.titulo + '"></canvas>' +
+        '<p class="grafico-coords"></p>' +
+        '<ul class="grafico-leyenda"></ul>' +
+        '<div class="controles"></div>' +
+        '<p class="grafico-info"></p>';
+
+      const canvas = figura.querySelector('canvas');
+      const formulaEl = figura.querySelector('.grafico-formula');
+      const coordsEl = figura.querySelector('.grafico-coords');
+      const leyendaEl = figura.querySelector('.grafico-leyenda');
+      const infoEl = figura.querySelector('.grafico-info');
+      const plano = new Plano(canvas, def.vista);
+      const valores = {};
+      let mouse = null;
+      let anchoPrevio = 0;
+      let formulaPrevia = '';
+
+      // Controles
+      const panel = figura.querySelector('.controles');
+      def.controles.forEach(function (c) {
+        valores[c.id] = c.valor;
+        const label = document.createElement('label');
+        if (c.tipo === 'opciones') {
+          label.innerHTML = '<span>' + c.etiqueta + '</span><select>' +
+            c.opciones.map(o => '<option value="' + o.valor + '">' + o.texto + '</option>').join('') + '</select>';
+          const select = label.querySelector('select');
+          select.value = c.valor;
+          select.addEventListener('change', function () { valores[c.id] = select.value; dibujar(); });
+        } else if (c.tipo === 'casilla') {
+          label.className = 'casilla';
+          label.innerHTML = '<input type="checkbox"><span>' + c.etiqueta + '</span>';
+          const casilla = label.querySelector('input');
+          casilla.checked = c.valor;
+          casilla.addEventListener('change', function () { valores[c.id] = casilla.checked; dibujar(); });
+        } else {
+          label.innerHTML = '<span>' + c.etiqueta + ' = <output>' + num(c.valor) + '</output></span>' +
+            '<input type="range" min="' + c.min + '" max="' + c.max + '" step="' + c.paso + '" value="' + c.valor + '">';
+          const rango = label.querySelector('input');
+          const salida = label.querySelector('output');
+          rango.addEventListener('input', function () {
+            valores[c.id] = parseFloat(rango.value);
+            salida.textContent = num(valores[c.id]);
+            dibujar();
+          });
+        }
+        panel.appendChild(label);
+      });
+
+      function dibujar() {
+        if (canvas.clientWidth === 0) return; // la pestaña está oculta
+        if (canvas.clientWidth !== anchoPrevio) {
+          anchoPrevio = canvas.clientWidth;
+          plano.ajustar();
+        }
+        plano.fondo();
+        const r = def.dibujar(plano, valores, mouse);
+
+        if (r.formula !== formulaPrevia) {
+          formulaPrevia = r.formula;
+          if (window.katex) katex.render(r.formula, formulaEl, { throwOnError: false, displayMode: true });
+          else formulaEl.textContent = r.formula;
+        }
+        leyendaEl.innerHTML = r.leyenda.map(function (item) {
+          const clase = 'muestra' + (item.discontinua ? ' discontinua' : '') + (item.punto ? ' punto' : '');
+          const estilo = item.punto
+            ? (item.abierto ? 'border: 2px solid ' + item.color : 'background: ' + item.color)
+            : 'border-top-color: ' + item.color;
+          return '<li><span class="' + clase + '" style="' + estilo + '"></span>' + item.texto + '</li>';
+        }).join('');
+        infoEl.textContent = r.info;
+        coordsEl.textContent = mouse
+          ? (r.lectura || 'x = ' + num(mouse.x) + ', y = ' + num(mouse.y))
+          : 'Pasá el mouse (o el dedo) sobre el gráfico para leer valores.';
+      }
+
+      function moverPuntero(e) {
+        const rect = canvas.getBoundingClientRect();
+        mouse = { x: plano.aX(e.clientX - rect.left), y: plano.aY(e.clientY - rect.top) };
+        dibujar();
+      }
+      canvas.addEventListener('pointermove', moverPuntero);
+      canvas.addEventListener('pointerdown', moverPuntero);
+      canvas.addEventListener('pointerleave', function () { mouse = null; dibujar(); });
+
+      // Se redibuja cuando cambia el tamaño o cuando la pestaña se hace visible
+      if ('ResizeObserver' in window) new ResizeObserver(dibujar).observe(canvas);
+      else window.addEventListener('resize', dibujar);
+      redibujos.push(dibujar);
+    }
+
+    // Al terminar de cargar: dibuja las fórmulas y muestra la vista inicial
+    window.addEventListener('DOMContentLoaded', function () {
+      // 1) Gráficos primero: no dependen de que KaTeX cargue bien.
+      //    Cada uno va en su try/catch para que un error no frene a los demás.
+      document.querySelectorAll('.grafico').forEach(function (figura) {
+        try {
+          crearGrafico(figura);
+        } catch (error) {
+          console.error(error);
+          figura.textContent = 'No se pudo dibujar este gráfico: ' + error.message;
+        }
+      });
+
+      // 2) Fórmulas del texto
+      try {
+        if (window.renderMathInElement) {
+          renderMathInElement(document.querySelector('main'), {
+            delimiters: [
+              { left: '\\[', right: '\\]', display: true },
+              { left: '\\(', right: '\\)', display: false }
+            ],
+            ignoredClasses: ['grafico'],
+            throwOnError: false
+          });
+        }
+      } catch (error) {
+        console.error(error);
+      }
+
+      if (document.fonts) document.fonts.ready.then(() => redibujos.forEach(f => f()));
+      mostrarVista();
+    });
+  </script>
+</body>
+</html>
